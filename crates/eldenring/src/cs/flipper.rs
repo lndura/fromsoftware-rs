@@ -1,4 +1,4 @@
-/// source of name: singleton reflection data
+// source of name: singleton reflection data
 #[repr(C)]
 #[shared::singleton("CSFlipper")]
 pub struct CSFlipper {
@@ -17,7 +17,6 @@ pub struct CSFlipper {
     unk30: [u8; 48],
     pub frame_time_history: [CSFlipperVsyncHistoryEntry; 32],
     pub frame_history_index: u32,
-    /// Time since last frame.
     pub last_frame_time: f32,
     /// Delta time used for task updates.
     /// Useful for making movement and coordinate changes consistent in your custom tasks.
@@ -40,15 +39,12 @@ pub struct CSFlipper {
     /// Game speed multiplier (1.0 = normal speed).
     pub game_speed: f32,
     pub use_special_timing_mode: bool,
-    /// padding?
     unk2d1: [u8; 3],
     unk2d4: f32,
     pub countdown_timer: f32,
-    unk2dc: [u8; 4]
+    unk2dc: [u8; 4],
 }
 
-// Source of name: Shared FS Ghidra repository
-// Source of values: Shared FS Ghidra repository.
 // Flipped the FPS mode and the setting description, because enums shouldn't start with numbers.
 // A.e "30FPS_VSYNC_ON" -> "VsyncOn30Fps" or "60FPS" -> "Default60Fps".
 #[repr(u32)]
@@ -66,16 +62,12 @@ pub enum FlipMode {
     NoSync85Fps = 0xa,
     Default120Fps = 0xb,
     NoSync120Fps = 0xc,
-    PlatformDefault = 0xd
+    PlatformDefault = 0xd,
 }
 
-// Source of name: Shared FS Ghidra repository
 #[repr(C)]
 pub struct CSFlipperVsyncHistoryEntry {
-    frame_delta_ticks: usize,
+    pub frame_delta_ticks: u64,
     /// Technically a BOOL (u32).
-    /// Hence padding for alignment.
     pub vsync_state: bool,
-    padding: [u8; 3],
-    unkc: [u8; 4],
 }
