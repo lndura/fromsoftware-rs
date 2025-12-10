@@ -1,0 +1,17 @@
+[package]
+name = "free-camera"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+shared.workspace = true
+eldenring.workspace = true
+windows = { version = "0.56", features = ["Win32_System_Console"] }
+tracing = "0.1.41"
+tracing-panic = "0.1.2"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }

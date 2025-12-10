@@ -1,4 +1,5 @@
 mod basic_hash_string;
+mod pad_manager;
 mod param_repository;
 mod resource;
 mod slot;
@@ -7,6 +8,7 @@ mod task;
 mod time;
 
 pub use basic_hash_string::*;
+pub use pad_manager::*;
 pub use param_repository::*;
 pub use resource::*;
 pub use slot::*;

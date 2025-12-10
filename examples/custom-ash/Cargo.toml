@@ -1,0 +1,15 @@
+[package]
+name = "custom-ash"
+version.workspace = true
+edition.workspace = true
+repository.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+shared.workspace = true
+eldenring.workspace = true
+serde = { version = "1.0.228", features = ["derive"] }
+toml = "0.9.8"

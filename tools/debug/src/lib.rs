@@ -21,6 +21,7 @@ use eldenring::cs::CSWorldSceneDrawParamManager;
 use eldenring::cs::FieldArea;
 use eldenring::cs::WorldAreaTime;
 use eldenring::cs::WorldChrMan;
+use eldenring::fd4::FD4PadManager;
 use eldenring::fd4::FD4ParamRepository;
 use eldenring::util::system::wait_for_system_init;
 
@@ -149,6 +150,7 @@ impl ImguiRenderLoop for EldenRingDebugGui {
                     render_debug_singleton::<CSTaskGroup>(&ui);
                     render_debug_singleton::<CSTaskImp>(&ui);
                     render_debug_singleton::<FD4ParamRepository>(&ui);
+                    render_debug_singleton::<FD4PadManager>(&ui);
                     item.end();
                 }
 

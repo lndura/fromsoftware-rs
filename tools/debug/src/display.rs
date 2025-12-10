@@ -17,6 +17,7 @@ pub(crate) mod gaitem;
 pub(crate) mod geometry;
 pub(crate) mod gparam;
 pub(crate) mod net_man;
+pub(crate) mod pad_manager;
 pub(crate) mod param;
 pub(crate) mod session_manager;
 pub(crate) mod sfx;

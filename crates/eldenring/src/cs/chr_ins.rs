@@ -915,7 +915,8 @@ pub struct CSChrPhysicsModule {
     /// Set by TAE Event 0 ChrActionFlag (action 27 DISABLE_GRAVITY)
     pub gravity_disabled: bool,
     unk1d6: u8,
-    unk1d7: u8,
+    /// True once jumped untill you've landed.
+    pub is_jumping: bool,
     unk1d8: u8,
     /// Set by TAE Event 0 ChrActionFlag (action 38 FLYING_CHARACTER_FALL)
     pub flying_character_fall_requested: bool,
@@ -1135,9 +1136,9 @@ pub struct CSChrTimeActModule {
 pub struct CSChrBehaviorModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
-    unk10: usize,
-    unk18: usize,
-    unk20: usize,
+    pub beh_character: OwnedPtr<BehCharacter>,
+    beh_character_proxy_driver: usize,
+    beh_raycast_interface: usize,
     unk28: usize,
     pub root_motion: F32Vector4,
     unk40: [u8; 0x20],
@@ -1758,6 +1759,26 @@ pub struct PlayerSessionHolder {
     unk10: usize,
     pub player_network_session: OwnedPtr<PlayerNetworkSession>,
     unk18: usize,
+}
+
+#[repr(C)]
+pub struct BehCharacter {
+    hk_beh_project_asset_manager: usize,
+    unk8: usize,
+    beh_bnd_file_cap: usize,
+    hk_beh_script_file_cap: usize,
+    hk_beh_script_asset_loader: usize,
+    pub hkb_character: OwnedPtr<HKBCharacter>,
+    //...
+}
+
+#[repr(C)]
+pub struct HKBCharacter {
+    vftable: usize,
+    property_bag: usize,
+    mem_size: u16,
+    pub ref_count: u16,
+    //_padding: [u8; 4]
 }
 
 #[repr(i32)]

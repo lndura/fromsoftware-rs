@@ -12,7 +12,11 @@ members = [
     "examples/apply-speffect",
     "examples/debug-line",
     "examples/spawn-asset",
-    "examples/present-action-button",
+    "examples/present-action-button", 
+    "examples/free-camera", 
+    "examples/console-test", 
+    "examples/custom-ash", 
+    "examples/basic-wall-jump",
 ]
 
 [workspace.package]

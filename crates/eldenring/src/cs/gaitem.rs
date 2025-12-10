@@ -215,7 +215,7 @@ pub struct CSGemSlot {
     /// Refers to the actual gem entry in the CSGaitemImp.
     pub gaitem_handle: GaitemHandle,
     // _padc: [u8; 0x4],
-}
+} 
 
 #[repr(C)]
 pub struct CSGemGaitemIns {
