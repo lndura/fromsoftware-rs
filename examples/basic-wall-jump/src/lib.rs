@@ -1,64 +1,23 @@
-use std::{iter, mem::transmute, time::{Duration, Instant}};
-
 use eldenring::{
-    cs::{CSTaskGroupIndex, CSTaskImp, ChrIns, HKBCharacter, WorldChrMan},
+    cs::{CSTaskGroupIndex, CSTaskImp, WorldChrMan},
     fd4::FD4TaskData,
     util::system::wait_for_system_init,
 };
-use shared::{FromStatic, Program, SharedTaskImpExt};
+use fromsoftware_shared::{FromStatic, Program, SharedTaskImpExt};
+use std::time::{Duration, Instant};
 
-use pelite::pe64::Pe;
+/// Grab the trait from play_animation.rs
+/// so that we can have our ChrIns play the animation.
+mod play_animation;
+use play_animation::ChrInsPlayAnim;
 
-const PLAY_ANIMATION_BY_NAME_RVA: u32 = 0x0;
-const JUMP_TIME_FRAME: Duration = Duration::from_millis(250);
-
-struct WallJumpManager {
-    last_jump_time: Instant,
-    has_jumped: bool,
-}
-
-impl WallJumpManager {
-    fn new() -> Self {
-        WallJumpManager { 
-            has_jumped: true,
-            last_jump_time: Instant::now()
-        }
-    }
-}
-
-enum JumpType {
-    None,
-    SlideJump,
-    WallClimb,
-}
-
-
-fn play_animation_by_name<S: AsRef<str>>(character: &ChrIns, animation: S) -> bool {
-    let Some(va) = Program::current()
-        .rva_to_va(PLAY_ANIMATION_BY_NAME_RVA)
-        .ok()
-    else {
-        return false;
-    };
-
-    let play_animation_by_name = unsafe { transmute::<u64, extern "C" fn(&HKBCharacter, *const u16) -> u32>(va) };
-
-    let wide_c_string: Vec<u16> = animation
-        .as_ref()
-        .encode_utf16()
-        .chain(iter::once(0))
-        .collect();
-    
-    let hkb_character = character.module_container.behavior.beh_character.hkb_character.as_ref();
-
-    let result = play_animation_by_name(hkb_character, wide_c_string.as_ptr());
-
-    result != u32::MAX
-}    
+/// Using ::*; here means we grab all "pub ..." items inside wall_climb.rs
+/// In this case that's JUMP_TIME_FRAME and WallJumpManager.
+mod wall_climb;
+use wall_climb::*;
 
 fn init_wall_jump_task() {
     let mut wj_man = WallJumpManager::new();
-
     let cs_task = (unsafe { CSTaskImp::instance() }).expect("Could not obtain CSTaskImp instance.");
     cs_task.run_recurring(
         move |_: &FD4TaskData| {
@@ -68,39 +27,44 @@ fn init_wall_jump_task() {
             else {
                 return;
             };
-            let now = Instant::now();
-            
-            let physics = &main_player.chr_ins.module_container.physics.as_ref();
 
+            // Grab physics module
+            let physics = &main_player.chr_ins.module_container.physics;
             if wj_man.has_jumped {
                 wj_man.has_jumped = physics.is_jumping;
-                return;
+                return; // return early if we are still performing a jump.
             }
 
-            let mut jump_type = JumpType::None;
+            let now = Instant::now();
 
             // Are we on a sliding cliff/surface?
             let slide_info = &physics.slide_info;
-            if !physics.is_touching_ground && slide_info.is_sliding {
-                jump_type = JumpType::SlideJump;
-            };
-            
-            // TODO: raycast to check wall verticality.
-            let _material_info = &physics.material_info;
-            let scaleable_wall = false;
+            let scaleable_slope = !physics.touching_solid_ground && slide_info.is_sliding;
 
-            // We should be allowed to jump if we can either scale the wall or the slope.
-            let can_wall_jump = scaleable_wall || scaleable_slope;
-
-            // Are we inside the input time frame?
-            let in_time_frame = now - wj_man.last_jump_time <= JUMP_TIME_FRAME;
-            if in_time_frame {
-                wj_man.has_jumped = true;
-                play_animation_by_name(&main_player.chr_ins, "W_Jump");
+            // Recreate a "trigger"-like behavior with an action window.
+            if scaleable_slope {
+                if !wj_man.has_entered_window {
+                    wj_man.has_entered_window = true;
+                    wj_man.window_enter_time = now;
+                }
+            } else {
+                wj_man.has_entered_window = false;
             }
 
-            wj_man.last_jump_time = now;
-            
+            // Checks if we are in aformentioned window
+            let in_jump_window = now.duration_since(wj_man.window_enter_time) <= JUMP_TIME_FRAME;
+
+            let jump_requested = main_player
+                .chr_ins
+                .module_container
+                .action_request
+                .action_requests
+                .jump();
+
+            if scaleable_slope && in_jump_window && jump_requested {
+                // play_animation_by_name returns true on successfully starting the animation.
+                wj_man.has_jumped = main_player.chr_ins.play_animation_by_name("W_Jump_D");
+            }
         },
         CSTaskGroupIndex::ChrIns_PostPhysicsSafe,
     );
@@ -117,7 +81,7 @@ unsafe extern "C" fn DllMain(_hmodule: usize, reason: u32) -> bool {
         // Wait for the game to initialize. Panic if it doesn't.
         wait_for_system_init(&Program::current(), Duration::MAX)
             .expect("Could not await system init.");
-        
+
         init_wall_jump_task();
     });
     true
