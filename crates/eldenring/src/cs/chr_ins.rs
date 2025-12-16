@@ -1142,7 +1142,7 @@ pub struct CSChrTimeActModule {
 pub struct CSChrBehaviorModule {
     vftable: usize,
     pub owner: NonNull<ChrIns>,
-    pub beh_character: OwnedPtr<BehCharacter>,
+    pub beh_character: OwnedPtr<BehaviorCharacter>,
     beh_character_proxy_driver: usize,
     beh_raycast_interface: usize,
     unk28: usize,
@@ -1770,18 +1770,19 @@ pub struct PlayerSessionHolder {
 }
 
 #[repr(C)]
-pub struct BehCharacter {
+pub struct BehaviorCharacter {
     hk_beh_project_asset_manager: usize,
     unk8: usize,
     beh_bnd_file_cap: usize,
+    ani_bnd_file_cap: usize,
     hk_beh_script_file_cap: usize,
     hk_beh_script_asset_loader: usize,
-    pub hkb_character: OwnedPtr<HKBCharacter>,
+    pub hkb_character: OwnedPtr<HavokBehaviorCharacter>,
     //...
 }
 
 #[repr(C)]
-pub struct HKBCharacter {
+pub struct HavokBehaviorCharacter {
     vftable: usize,
     property_bag: usize,
     mem_size: u16,
