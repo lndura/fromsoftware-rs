@@ -3,8 +3,7 @@ use eldenring::{
     Tree,
     cs::{CSKeyAssign, CSPad},
     dluid::{
-        DLUserInputDeviceImpl, DLVirtualAnalogKeyInfo, DLVirtualInputData, DynamicBitset,
-        MultiDevices, MultiDevices_0x78, VirtualMultiDevice,
+        DLUserInputDeviceImpl, DLVirtualAnalogKeyInfo, DLVirtualInputData, DynamicBitset, KeyboardDevice, MouseDevice, MultiDevices, MultiDevices_0x78, PadDevice, VirtualMultiDevice
     },
     dlut::DLFixedVector,
     fd4::{FD4PadManager, InputType, InputTypeGroup, PadEntry, WindowCursorContext},
@@ -307,6 +306,25 @@ impl DebugDisplay for MultiDevices {
             let vm_device = unsafe { self.virtual_multi_device.as_ref() };
             vm_device.render_debug(ui);
         });
+
+        
+        for (index, pad_device_ptr) in self.pad_devices.iter().enumerate() {
+            ui.header(format!("PadDevice[{}]", index), || {
+                let pad_device = unsafe { pad_device_ptr.as_ref() };
+                pad_device.render_debug(ui);
+            });
+        }
+
+        ui.header("MouseDevice", || {
+            let mouse_device = unsafe { self.mouse_device.as_ref() };
+            mouse_device.render_debug(ui);
+        });
+
+        ui.header("KeyboardDevice", || {
+            let keyboard_device = unsafe { self.keyboard_device.as_ref() };
+            keyboard_device.render_debug(ui);
+        });
+
         ui.header("unk78", || {
             self.unk78.render_debug(ui);
         });
@@ -340,16 +358,40 @@ impl DebugDisplay for VirtualMultiDevice {
     }
 }
 
+impl DebugDisplay for PadDevice {
+    fn render_debug(&self, ui: &Ui) {
+        ui.header("DLUserInputDeviceImpl", || {
+            self.user_input_device_impl.render_debug(ui);
+        });
+    }
+}
+
+impl DebugDisplay for MouseDevice {
+    fn render_debug(&self, ui: &Ui) {
+        ui.header("DLUserInputDeviceImpl", || {
+            self.user_input_device_impl.render_debug(ui);
+        });
+    }
+}
+
+impl DebugDisplay for KeyboardDevice {
+    fn render_debug(&self, ui: &Ui) {
+        ui.header("DLUserInputDeviceImpl", || {
+            self.user_input_device_impl.render_debug(ui);
+        });
+    }
+}
+
 impl DebugDisplay for DLUserInputDeviceImpl {
     fn render_debug(&self, ui: &Ui) {
         ui.header("virtual_input_data", || {
             self.virtual_input_data.render_debug(ui);
         });
-        ui.header("unkc8", || {
-            self.unkc8.render_debug(ui);
+        ui.header("analog_positive_axis", || {
+            self.analog_positive_axis.render_debug(ui);
         });
-        ui.header("unkf0", || {
-            self.unkf0.render_debug(ui);
+        ui.header("analog_negative_axis", || {
+            self.analog_negative_axis.render_debug(ui);
         });
         ui.header("initial_virtual_input_data", || {
             self.initial_virtual_input_data.render_debug(ui);

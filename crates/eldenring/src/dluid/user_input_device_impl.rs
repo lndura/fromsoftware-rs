@@ -6,31 +6,51 @@ use crate::{Vector, dlkr::DLPlainLightMutex};
 /// Source of name: RTTI
 #[repr(C)]
 pub struct DLUserInputDeviceImpl {
-    vftable: usize,
-    unk08: usize,
+    _vftable: usize,
+    unk008: usize,
     /// Contains a reference to the same [DLVirtualInputData] from `initial_virtual_input_data`.
     ///
     /// The game accesses this from [FD4PadManager] and it's [CSPad] instances to poll inputs.
     pub virtual_input_data: DLVirtualInputData,
     user_input_converters: Vector<NonNull<usize>>,
-    unk80: usize,
-    unk88: usize,
+    unk080: usize,
+    unk088: usize,
     pub mutex: DLPlainLightMutex,
-    unkc0: f32,
-    unkc4: f32,
-    pub unkc8: DLVirtualAnalogKeyInfo<f32>,
-    pub unkf0: DLVirtualAnalogKeyInfo<f32>,
+    unk0c0: f32,
+    unk0c4: f32,
+    pub analog_positive_axis: DLVirtualAnalogKeyInfo<f32>,
+    pub analog_negative_axis: DLVirtualAnalogKeyInfo<f32>,
     unk118: u8,
     unk11c: u32,
     unk120: usize,
     unk128: u32,
     unk12c: u32,
     unk130: usize,
-    // doesn't contain jack shit.
-    unk138: [u8; 0x630],
+    pub unk138: DLuserInputDeviceImpl0x138,
+    unk750: [u8; 0x18],
     user_input_mapper_slots: Vector<NonNull<usize>>,
-    /// The [DLVirtualInputData] is inserted here, then get's referenced by `virtual_input_data`.
+    /// The [DLVirtualInputData] is inserted here and gets memcpy'd over to `virtual_input_data`
     pub initial_virtual_input_data: DLVirtualInputData,
+}
+
+#[repr(C)]
+pub struct DLuserInputDeviceImpl0x138 {
+    pub entries: [DLuserInputDeviceImpl0x138Entry; 0x40],
+    /// index game will use to update from an entry
+    pub index: usize,
+    /// counter that gets incremented
+    pub counter: u64,
+    /// copied over from counter.
+    pub counter_reference: u64
+}
+
+#[repr(C)]
+pub struct DLuserInputDeviceImpl0x138Entry {
+    pub virtual_input_data: NonNull<DLVirtualInputData>,
+    /// reference to counter in DLuserInputDeviceImpl0x138.counter
+    pub counter_reference: u64,
+    /// Result of Windows QueryPerformanceCounter.
+    pub performance_counter: usize,
 }
 
 impl DLUserInputDeviceImpl {

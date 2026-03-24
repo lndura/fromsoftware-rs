@@ -53,11 +53,14 @@ pub struct FD4PadManager {
     unk2e8: u64,
     unk2f0: u64,
     /// Trigger to set `is_back_ground_window` to true.
-    /// Becomes false after triggering.
+    /// 
+    /// Becomes `false` after triggering in the next frame.
     pub exit_foreground_signaled: bool,
     /// True when the game isn't a foreground window.
+    /// 
     /// Disables inputs from being read while true.
-    /// Get's triggered by `exit_foreground_signaled`.
+    /// 
+    /// Becomes `true` after the frame `exit_foreground_signaled` was set to `true`.
     pub is_back_ground_window: bool,
     unk2fa: bool,
     unk2fb: bool,
@@ -66,7 +69,7 @@ pub struct FD4PadManager {
 impl FD4PadManager {
     /// Obtains the specific [CSPad] responsible for regular in-game inputs.
     /// This is polled during the `InGameStep`.
-    /// The rtti for this instance is `CSInGamePad_UserInput`.
+    /// The rtti for this instance is `CSInGamePad_UserInput1`.
     pub fn get_in_game_pad(&self) -> Option<&mut CSInGamePad> {
         self.get_pad_instance::<CSInGamePad>()
     }
@@ -86,6 +89,7 @@ impl FD4PadManager {
                 })
             })
     }
+
 }
 
 #[repr(C)]
