@@ -44,7 +44,7 @@ pub const RVAS: RvaBundle = RvaBundle {
     csgaitem_ins_vmt: 0x2a7e580,
     csgem_gaitem_ins_vmt: 0x2a7e6a8,
     csin_game_key_assign_vmt: 0x2be0400,
-    csin_game_pad_vmt: 0x2a27a30,
+    csin_game_pad_vmt: 0x2be0478,
     cskey_assign_vmt: 0x2be05d8,
     cslua_event_msg_exec_func_vmt: 0x2a6a0a0,
     cslua_event_msg_exec_string_vmt: 0x2a6a088,

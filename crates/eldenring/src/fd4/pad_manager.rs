@@ -53,13 +53,13 @@ pub struct FD4PadManager {
     unk2e8: u64,
     unk2f0: u64,
     /// Trigger to set `is_back_ground_window` to true.
-    /// 
+    ///
     /// Becomes `false` after triggering in the next frame.
     pub exit_foreground_signaled: bool,
     /// True when the game isn't a foreground window.
-    /// 
+    ///
     /// Disables inputs from being read while true.
-    /// 
+    ///
     /// Becomes `true` after the frame `exit_foreground_signaled` was set to `true`.
     pub is_back_ground_window: bool,
     unk2fa: bool,
@@ -89,11 +89,11 @@ impl FD4PadManager {
                 })
             })
     }
-
 }
 
 #[repr(C)]
 pub struct PadEntry {
+    /// Pointer to it's [CSPad] subclass.
     pub entry: NonNull<CSPad>,
     /// Setting this to `true` enables you to read inputs using this [CSPad] instance.
     pub enable_use: bool,

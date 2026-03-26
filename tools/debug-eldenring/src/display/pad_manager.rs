@@ -3,7 +3,7 @@ use eldenring::{
     Tree,
     cs::{CSKeyAssign, CSPad},
     dluid::{
-        DLUserInputDeviceImpl, DLVirtualAnalogKeyInfo, DLVirtualInputData, DynamicBitset, KeyboardDevice, MouseDevice, MultiDevices, MultiDevices_0x78, PadDevice, VirtualMultiDevice
+        DIMouseState2, DLUserInputDeviceImpl, DLVirtualAnalogKeyInfo, DLVirtualInputData, DynamicBitset, KeyboardDevice, MouseDevice, MultiDevices, MultiDevices_0x78, PadDevice, VirtualMultiDevice, WButtons
     },
     dlut::DLFixedVector,
     fd4::{FD4PadManager, InputType, InputTypeGroup, PadEntry, WindowCursorContext},
@@ -363,6 +363,22 @@ impl DebugDisplay for PadDevice {
         ui.header("DLUserInputDeviceImpl", || {
             self.user_input_device_impl.render_debug(ui);
         });
+
+        ui.header("XInput GAMEPAD_STATE", || {
+            self.w_buttons.render_debug(ui);
+            ui.text(format!("dw_user_index: {}", self.dw_user_index));
+            ui.text(format!("s_thumb_lx: {}", self.s_thumb_lx));
+            ui.text(format!("s_thumb_ly: {}", self.s_thumb_ly));
+            ui.text(format!("s_thumb_rx: {}", self.s_thumb_rx));
+            ui.text(format!("s_thumb_lx: {}", self.s_thumb_lx));
+        });
+
+    }
+}
+
+impl DebugDisplay for WButtons {
+    fn render_debug(&self, ui: &Ui) {
+        ui.text(format!("{:#?}", self));
     }
 }
 
@@ -371,6 +387,33 @@ impl DebugDisplay for MouseDevice {
         ui.header("DLUserInputDeviceImpl", || {
             self.user_input_device_impl.render_debug(ui);
         });
+
+        ui.header("DirectInput8 MOUSE_STATE", || {
+            self.mouse_state.render_debug(ui);
+        });
+
+        ui.text(format!(
+            "Normalized mouse movement:\n  lx: {}\n  ly: {}\n  lz: {}",
+            self.normalized_lx, self.normalized_ly, self.normalized_lz
+        ));
+    }
+}
+
+impl DebugDisplay for DIMouseState2 {
+    fn render_debug(&self, ui: &Ui) {
+        ui.text(format!(
+            "Mouse movement:\n  lx: {}\n  ly: {}\n  lz: {}",
+            self.lx, self.ly, self.lz
+        ));
+
+        ui.text("Mouse buttons:");
+        for index in 0..self.buttons.len() {
+            let state = self.pressed(index);
+            ui.text(format!(
+                "  [{}]: {}",
+                index, state
+            ));
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 use core::slice;
 use std::ptr::NonNull;
 
-use crate::{Vector, dlkr::DLPlainLightMutex};
+use crate::{Vector, dlkr::DLPlainLightMutex, dluid::UserInputExtension};
 
 /// Source of name: RTTI
 #[repr(C)]
@@ -12,7 +12,7 @@ pub struct DLUserInputDeviceImpl {
     ///
     /// The game accesses this from [FD4PadManager] and it's [CSPad] instances to poll inputs.
     pub virtual_input_data: DLVirtualInputData,
-    user_input_converters: Vector<NonNull<usize>>,
+    pub user_input_extensions: Vector<UserInputExtension>,
     unk080: usize,
     unk088: usize,
     pub mutex: DLPlainLightMutex,
@@ -41,7 +41,7 @@ pub struct DLuserInputDeviceImpl0x138 {
     /// counter that gets incremented
     pub counter: u64,
     /// copied over from counter.
-    pub counter_reference: u64
+    pub counter_reference: u64,
 }
 
 #[repr(C)]
