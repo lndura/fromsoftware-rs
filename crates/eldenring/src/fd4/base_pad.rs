@@ -4,15 +4,15 @@ use crate::{
     Pair, Tree,
     cs::CSKeyAssign,
     dltx::{DLString, DLUTF16StringKind},
-    dluid::MultiDevices,
+    dluid::InputDevices,
 };
 
 #[repr(C)]
 pub struct FD4BasePad {
-    pub vftable: usize,
-    allocator: usize,
-    /// [MultiDevices] instance referenced in `FD4PadManager.devices`
-    pub multi_devices: NonNull<MultiDevices>,
+    pub vftable: *const (),
+    allocator: *const (),
+    /// [InputDevices] instance referenced in `FD4PadManager.devices`
+    pub input_devices: NonNull<InputDevices>,
     /// `パッド名未設定` | `Pad name not set`
     ///
     /// The game will sometimes change this to the name of the [CSPad] type.
@@ -26,6 +26,7 @@ pub struct FD4BasePad {
     ///
     /// This will be the same [Subclass<>] as the [CSPad] that holds this instance.
     pub key_assign: NonNull<CSKeyAssign>,
+    /// Usually just 1.
     unk30: usize,
     /// Represents a [Map<>] that groups the given input code to an [InputTypeGroup].
     ///
@@ -43,7 +44,7 @@ pub struct FD4BasePad {
     pub window_cursor_context: NonNull<WindowCursorContext>,
     /// Represents a [Map<>] that maps the given input code to a boolean representing whether the input is pressed or not.
     ///
-    /// This is, as far as i've bothered to check, always empty for the `CSInGamePad_UserInput` instance.
+    /// Couldn't find a single reference that inserts in to this Tree in Ghidra for `CSInGamePad`'s.
     pub unused_input_map: Tree<Pair<i32, bool>>,
 }
 

@@ -2,7 +2,7 @@ use std::mem::MaybeUninit;
 use std::ptr::NonNull;
 
 use crate::cs::{CSInGamePad, CSKeyAssign, CSMenuViewerPad, CSPad};
-use crate::dluid::MultiDevices;
+use crate::dluid::InputDevices;
 use crate::dlut::DLFixedVector;
 use crate::{Pair, Tree};
 
@@ -19,14 +19,14 @@ const CAPACITY: usize = 4;
 #[shared::singleton("FD4PadManager")]
 pub struct FD4PadManager {
     /// Copied over from the `Global_MainHeapAllocator`` when constructed.
-    allocator: usize,
+    allocator: *const (),
     /// Copied over from [CSWindowImp] when constructed.
     pub window_handle: isize,
-    unk10: usize,
-    /// List of `MultiDevice` instances. Each `MultiDevice` maps the button states from the connected devices.
+    unk10: *const (),
+    /// List of `InputDevices` instances. Each `InputDevices` maps the button states from the connected devices.
     ///
-    /// The game looks up a [CSPad] and then checks the [CSKeyAssign] before indexing the devices for the state of the buttons.
-    pub multi_device_list: DLFixedVector<NonNull<MultiDevices>, CAPACITY>,
+    /// The game looks up a [CSPad] and then checks the [CSKeyAssign] before indexing the [VirtualMultiDevice] for the state of the buttons.
+    pub input_devices_list: DLFixedVector<NonNull<InputDevices>, CAPACITY>,
     /// List of pairs holding various [CSPad] instances.
     ///
     /// The game looks up the [CSPad] with the [CSInGamePad_UserInput1Vmt] by it's [RuntimeTypeHandle].
@@ -38,7 +38,7 @@ pub struct FD4PadManager {
         DLFixedVector<NonNull<Tree<Pair<RuntimeTypeHandle, NonNull<CSKeyAssign>>>>, CAPACITY>,
     /// Contains pointers to the same struct as field 0x58 in the [CSKeyAssign] instances.
     unka8: DLFixedVector<NonNull<usize>, CAPACITY>,
-    unkd8: usize,
+    unkd8: *const (),
     /// List of the initialized [PadEntry] instances.
     ///
     /// When the [PadEntry] in the `pad_list` is created, it's gonna store a reference here.
@@ -48,7 +48,7 @@ pub struct FD4PadManager {
     unk128: DLFixedVector<usize, CAPACITY>,
     unk158: [u8; 0xC0],
     unk218: u64,
-    heap_allocator: usize,
+    heap_allocator: *const (),
     unk228: [u8; 0xC0],
     unk2e8: u64,
     unk2f0: u64,

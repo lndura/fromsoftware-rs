@@ -4,30 +4,6 @@ use shared::{Subclass, Superclass};
 
 use crate::fd4::{FD4BasePad, InputType, InputTypeGroup};
 
-// To not overcomplicate things we just use this base instance, because it can already poll inputs.
-// The game has a bunch of helper functions and structures that manage these classes, such as the `CSPadWapper<>` struct.
-// Below i've written more information on that.
-//
-// The following logic is applied to CSPad instances to poll inputs:
-//
-// In this example the "CSDebugPausePad_UserInput2" subclass is used.
-// let wrapped_pad = CSPadWapper::Default();
-// wrapped_pad.vftable = CSDebugPausePad_UserInput2::vftable
-// wrapped_pad.unk08 = 0;
-// wrapped_pad.unk10 = 0;
-// wrapped_pad.pad = NonNull::new(CSDebugPausePad_UserInput1);
-//
-//
-//
-// Other subclasses used by the CSPadWapper are:
-//
-// CSPadWapper<CSDebugBootMenuPad_UserInput2, CSDebugBootMenuPad_UserInput1>
-// CSPadWapper<CSDebugCamPad_UserInput2, CSDebugCamPad>
-// CSPadWapper<CSDebugPausePad_UserInput2, CSDebugPausePad_UserInput1>
-// CSPadWapper<CSInGamePad_UserInput2, CSInGamePad_UserInput1>
-// CSPadWapper<CSMenuViewerPad_UserInput2, CSMenuViewerPad>
-// CSPadWapper<CSModelViewerPad_UserInput2, CSModelViewerPad>
-
 /// Represents the base CSPad class.
 /// The game has various CSPad instances, all with a different RTTI name.
 ///
@@ -50,7 +26,7 @@ pub struct CSPad {
 }
 
 impl CSPad {
-    // TODO: FIX THIS ROIEAJFAOPGJNA{gva}
+
     pub fn poll_digital_input(&self, input: i32) -> bool {
         if !self.allow_polling {
             return false;
@@ -133,13 +109,13 @@ impl CSPad {
     }
 
     pub fn index_digital_input(&self, virtual_input_index: i32) -> bool {
-        let multi_device = unsafe { self.multi_devices.as_ref() };
+        let multi_device = unsafe { self.input_devices.as_ref() };
 
         let user_input_device = unsafe {
             &multi_device
                 .virtual_multi_device
                 .as_ref()
-                .user_input_device_impl
+                .device
         };
 
         if user_input_device.get_virtual_digital_state(virtual_input_index as usize) {
@@ -166,11 +142,11 @@ impl CSPad {
     pub fn index_analog_input(&self, virtual_input_index: i32) -> f32 {
         let user_input_device = unsafe {
             &self
-                .multi_devices
+                .input_devices
                 .as_ref()
                 .virtual_multi_device
                 .as_ref()
-                .user_input_device_impl
+                .device
         };
 
         user_input_device.get_virtual_analog_state(virtual_input_index as usize)

@@ -3,7 +3,9 @@ use eldenring::{
     Tree,
     cs::{CSKeyAssign, CSPad},
     dluid::{
-        DIMouseState2, DLUserInputDeviceImpl, DLVirtualAnalogKeyInfo, DLVirtualInputData, DynamicBitset, KeyboardDevice, MouseDevice, MultiDevices, MultiDevices_0x78, PadDevice, VirtualMultiDevice, WButtons
+        DIMouseState2, DLUserInputDeviceImpl, DLVirtualAnalogKeyInfo, DLVirtualInputData,
+        DynamicBitset, InputDevices, KeyboardDevice, MouseDevice, MultiDevices0x78, PadDevice,
+        VirtualMultiDevice, WButtons,
     },
     dlut::DLFixedVector,
     fd4::{FD4PadManager, InputType, InputTypeGroup, PadEntry, WindowCursorContext},
@@ -46,7 +48,7 @@ fn render_tree<F: Fn(&T), T, S: AsRef<str>>(ui: &Ui, label: S, tree: &Tree<T>, f
 
 impl DebugDisplay for FD4PadManager {
     fn render_debug(&self, ui: &Ui) {
-        render_fixed_vector(ui, "MultiDevices list", &self.multi_device_list, |entry| {
+        render_fixed_vector(ui, "MultiDevices list", &self.input_devices_list, |entry| {
             let multi_device = unsafe { entry.as_ref() };
             multi_device.render_debug(ui);
         });
@@ -122,7 +124,7 @@ impl DebugDisplay for PadEntry {
 impl DebugDisplay for CSPad {
     fn render_debug(&self, ui: &Ui) {
         let program = &Program::current();
-        let vftable = self.vftable;
+        let vftable = self.vftable as usize;
         if let Some(class_name) = vftable_classname(program, vftable) {
             ui.text(format!("addr: {:#X}\nname: {}", vftable, class_name));
         } else {
@@ -130,7 +132,7 @@ impl DebugDisplay for CSPad {
         }
 
         ui.header("multi_devices", || {
-            let multi_device = unsafe { self.multi_devices.as_ref() };
+            let multi_device = unsafe { self.input_devices.as_ref() };
             multi_device.render_debug(ui);
         });
 
@@ -234,39 +236,12 @@ impl DebugDisplay for InputTypeGroup {
 impl DebugDisplay for CSKeyAssign {
     fn render_debug(&self, ui: &Ui) {
         let program = &Program::current();
-        let vftable = self.vftable;
+        let vftable = self.vftable as usize;
         if let Some(class_name) = vftable_classname(program, vftable) {
             ui.text(format!("addr {:#X}\nname: {}", vftable, class_name));
         } else {
             ui.text("CSKeyAssign instance rtti couldn't be read.");
         }
-
-        ui.header("keybind_vector", || {
-            let keybind_vector = &self.keybind_vector;
-            ui.table(
-                "keybind_vector",
-                [
-                    TableColumnSetup::new("key"),
-                    TableColumnSetup::new("value"),
-                    TableColumnSetup::new("unk8"),
-                    TableColumnSetup::new("unkc"),
-                    TableColumnSetup::new("unk10"),
-                ],
-                keybind_vector.items().iter(),
-                |ui, _, pair| {
-                    ui.table_next_column();
-                    ui.text(format!("{}", pair.key));
-                    ui.table_next_column();
-                    ui.text(format!("{}", pair.value));
-                    ui.table_next_column();
-                    ui.text(format!("{}", pair.unk8));
-                    ui.table_next_column();
-                    ui.text(format!("{}", pair.unkc));
-                    ui.table_next_column();
-                    ui.text(format!("{}", pair.unk10));
-                },
-            );
-        });
 
         ui.header("virtual_input_data_index_map", || {
             let bitset_index_map = unsafe { self.virtual_input_data_index_map.as_ref() };
@@ -300,14 +275,13 @@ impl DebugDisplay for CSKeyAssign {
     }
 }
 
-impl DebugDisplay for MultiDevices {
+impl DebugDisplay for InputDevices {
     fn render_debug(&self, ui: &Ui) {
         ui.header("VirtualMultiDevice", || {
             let vm_device = unsafe { self.virtual_multi_device.as_ref() };
             vm_device.render_debug(ui);
         });
 
-        
         for (index, pad_device_ptr) in self.pad_devices.iter().enumerate() {
             ui.header(format!("PadDevice[{}]", index), || {
                 let pad_device = unsafe { pad_device_ptr.as_ref() };
@@ -331,7 +305,7 @@ impl DebugDisplay for MultiDevices {
     }
 }
 
-impl DebugDisplay for MultiDevices_0x78 {
+impl DebugDisplay for MultiDevices0x78 {
     fn render_debug(&self, ui: &Ui) {
         ui.table(
             "Bitset fallback",
@@ -353,7 +327,7 @@ impl DebugDisplay for MultiDevices_0x78 {
 impl DebugDisplay for VirtualMultiDevice {
     fn render_debug(&self, ui: &Ui) {
         ui.header("DLUserInputDeviceImpl", || {
-            self.user_input_device_impl.render_debug(ui);
+            self.device.render_debug(ui);
         });
     }
 }
@@ -361,7 +335,7 @@ impl DebugDisplay for VirtualMultiDevice {
 impl DebugDisplay for PadDevice {
     fn render_debug(&self, ui: &Ui) {
         ui.header("DLUserInputDeviceImpl", || {
-            self.user_input_device_impl.render_debug(ui);
+            self.device.render_debug(ui);
         });
 
         ui.header("XInput GAMEPAD_STATE", || {
@@ -372,7 +346,6 @@ impl DebugDisplay for PadDevice {
             ui.text(format!("s_thumb_rx: {}", self.s_thumb_rx));
             ui.text(format!("s_thumb_lx: {}", self.s_thumb_lx));
         });
-
     }
 }
 
@@ -385,11 +358,11 @@ impl DebugDisplay for WButtons {
 impl DebugDisplay for MouseDevice {
     fn render_debug(&self, ui: &Ui) {
         ui.header("DLUserInputDeviceImpl", || {
-            self.user_input_device_impl.render_debug(ui);
+            self.device.render_debug(ui);
         });
 
         ui.header("DirectInput8 MOUSE_STATE", || {
-            self.mouse_state.render_debug(ui);
+            self.di_mouse_state.render_debug(ui);
         });
 
         ui.text(format!(
@@ -407,12 +380,9 @@ impl DebugDisplay for DIMouseState2 {
         ));
 
         ui.text("Mouse buttons:");
-        for index in 0..self.buttons.len() {
-            let state = self.pressed(index);
-            ui.text(format!(
-                "  [{}]: {}",
-                index, state
-            ));
+        for button in 0..self.buttons.len() {
+            let state = self.pressed(button);
+            ui.text(format!("  [{}]: {}", button, state));
         }
     }
 }
@@ -420,7 +390,15 @@ impl DebugDisplay for DIMouseState2 {
 impl DebugDisplay for KeyboardDevice {
     fn render_debug(&self, ui: &Ui) {
         ui.header("DLUserInputDeviceImpl", || {
-            self.user_input_device_impl.render_debug(ui);
+            self.device.render_debug(ui);
+        });
+
+        ui.header("DirectInput8 KEYBOARD STATE", || {
+            let len = self.di_keyboard_state.len();
+            for key in 0..len {
+                let state = self.pressed(key);
+                ui.text(format!("  [{}]: {}", key, state));
+            }
         });
     }
 }
