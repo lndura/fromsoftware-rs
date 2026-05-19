@@ -6,10 +6,12 @@ mod clipboard;
 mod display;
 mod ext;
 mod state_map;
+mod input;
 
 pub use clipboard::*;
 pub use ext::*;
 pub use state_map::*;
+pub use input::*;
 
 /// Initializes the debug tool as a DLL plugin, setting up a panic handler,
 /// tracing, and the basic hooks into the underlying rendering system.

@@ -110,8 +110,16 @@ impl ImguiRenderLoop for EldenRingDebugGui {
         unsafe {
             let ctx = imgui_sys::igGetCurrentContext();
             forward_imgui_context_on_reload(ctx);
+            let blocker = InputBlocker::get_instance();
+            forward_input_blocker_on_reload(blocker)
         }
         self.update_scale();
+        unsafe {
+            let blocker = InputBlocker::get_instance();
+            blocker
+                .install_hooks()
+                .expect("Failed to install input hook")
+        }
 
         // SAFETY: *do not* modify this function signature while the game is running.
         unsafe {
@@ -122,6 +130,10 @@ impl ImguiRenderLoop for EldenRingDebugGui {
 
 #[libhotpatch::hotpatch]
 unsafe fn render_live_reload(gui: &mut EldenRingDebugGui, ui: &mut Ui) {
+    let io = ui.io();
+    let blocker = InputBlocker::get_instance();
+    blocker.block_from_io(io);
+
     let program = Program::current();
 
     ui.window("Elden Ring Rust Bindings Debug")
@@ -198,4 +210,12 @@ unsafe fn render_live_reload(gui: &mut EldenRingDebugGui, ui: &mut Ui) {
 unsafe fn forward_imgui_context_on_reload(ctx: *mut imgui_sys::ImGuiContext) {
     static ONCE: Once = Once::new();
     ONCE.call_once(|| unsafe { imgui_sys::igSetCurrentContext(ctx) });
+}
+
+#[libhotpatch::hotpatch]
+unsafe fn forward_input_blocker_on_reload(blocker: &'static InputBlocker) {
+    static ONCE: Once = Once::new();
+    ONCE.call_once(|| {
+        InputBlocker::forward_instance(blocker);
+    });
 }
