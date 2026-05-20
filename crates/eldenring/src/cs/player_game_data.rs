@@ -5,8 +5,9 @@ use bitfield::bitfield;
 use thiserror::Error;
 
 use crate::{
-    BasicVector, DLVector,
+    DLVector,
     cs::{ChrType, MultiplayRole},
+    from_net::FNVector,
 };
 use shared::{IsEmpty, MaybeEmpty, NonEmptyIteratorExt, NonEmptyIteratorMutExt, OwnedPtr};
 
@@ -153,7 +154,7 @@ pub struct PlayerGameData {
     _pad931: [u8; 3],
     unk934: u32,
     /// Vector of all visited play area IDs
-    pub visited_areas: BasicVector<u32>,
+    pub visited_areas: FNVector<u32>,
     pub mount_handle: FieldInsHandle,
     unk958: [u8; 0x8],
     pub damage_negation_physical: i32,

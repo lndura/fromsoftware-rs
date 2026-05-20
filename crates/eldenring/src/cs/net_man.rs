@@ -1,10 +1,11 @@
-use std::{ptr::NonNull, string::FromUtf8Error};
+use std::ptr::NonNull;
 
 use crate::{
-    BasicVector, DLVector,
+    DLVector,
     cs::{MultiplayRole, MultiplayType, SummonParamType},
     dltx::DLString,
     fd4::{FD4StepBase, FD4StepBaseInterface, FD4Time},
+    from_net::{FNString, FNVector},
     position::BlockPosition,
     stl::DLList,
 };
@@ -109,7 +110,7 @@ pub struct BreakInData {
     pub multiplay_role: MultiplayRole,
     pub has_password: bool,
     unk1e: u8,
-    pub join_data: BasicVector<u8>,
+    pub join_data: FNVector<u8>,
 }
 
 #[repr(C)]
@@ -136,21 +137,15 @@ pub enum BreakInSearchState {
 #[repr(C)]
 pub struct BreakInTarget {
     pub player_id: u32,
-    pub external_id: BasicVector<u8>,
+    pub external_id: FNString,
     pub play_region: u32,
-}
-
-impl BreakInTarget {
-    pub fn external_id_str(&self) -> Result<String, FromUtf8Error> {
-        String::from_utf8(self.external_id.items().to_vec())
-    }
 }
 
 #[repr(C)]
 pub struct BreakInManager {
     pub multiplay_type: MultiplayType,
-    pub targets: BasicVector<BreakInTarget>,
-    unk20: BasicVector<()>,
+    pub targets: FNVector<BreakInTarget>,
+    unk20: FNVector<()>,
     /// Data from breakin push
     pub data: BreakInData,
     pub point_manager: BreakInPointManager,
@@ -363,7 +358,7 @@ pub struct CSQuickMatchContext {
     /// Spawn data for the local player.
     pub spawn_data: QuickmatchSpawnData,
     /// Vector of arenas available for quickmatch to randomly select from.
-    pub arena_list: BasicVector<QuickMatchArena>,
+    pub arena_list: FNVector<QuickMatchArena>,
     unk40: DLVector<usize>,
     unk60: DLVector<usize>,
     /// All quickmatch participants.
