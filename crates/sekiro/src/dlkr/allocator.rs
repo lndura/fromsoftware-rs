@@ -23,6 +23,6 @@ pub trait DLAllocatorVmt {
     fn deallocate(&self, allocation: *mut u8);
 }
 
-pub struct DLAllocatorBase {
+pub struct DLAllocator {
     pub vftable: VPtr<dyn DLAllocatorVmt, Self>,
 }

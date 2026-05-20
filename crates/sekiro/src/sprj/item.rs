@@ -6,7 +6,7 @@ use pelite::pe64::Pe;
 use shared::{FromStatic, IncompleteArrayField, InstanceResult, OwnedPtr, Program};
 
 use super::ItemId;
-use crate::{dlkr::DLAllocatorBase, rva, stl::DLVector};
+use crate::{dlkr::DLAllocator, rva, stl::DLVector};
 
 #[repr(C)]
 // Source of name: RTTI
@@ -37,7 +37,7 @@ pub struct MapItemMan {
     _unk130: u8,
     _unk134: u32,
     _unk138: u32,
-    _unk140: NonNull<DLAllocatorBase>,
+    _unk140: NonNull<DLAllocator>,
     _unk148: u64,
     _unk150: u64,
     _unk158: u32,

@@ -24,6 +24,6 @@ pub trait DLAllocatorVmt {
 }
 
 #[repr(transparent)]
-pub struct DLAllocatorBase {
+pub struct DLAllocator {
     pub vftable: VPtr<dyn DLAllocatorVmt, Self>,
 }

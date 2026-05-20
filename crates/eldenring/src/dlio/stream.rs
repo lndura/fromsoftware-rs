@@ -3,7 +3,7 @@ use std::ptr::NonNull;
 
 use vtable_rs::VPtr;
 
-use crate::dlkr::DLAllocatorBase;
+use crate::dlkr::DLAllocator;
 use shared::{OwnedPtr, Subclass, Superclass};
 
 use super::{DLFileOperatorContainer, DLFileSeekDirection, DLIOResult};
@@ -305,7 +305,7 @@ impl io::Write for DLFileOutputStream {
 #[repr(C)]
 pub struct DLStreamBuffer {
     /// Allocator used for this stream.
-    pub allocator: OwnedPtr<DLAllocatorBase>,
+    pub allocator: OwnedPtr<DLAllocator>,
     /// Pointer to the start of the buffer data.
     pub data: *mut u8,
     /// Capacity of the buffer.

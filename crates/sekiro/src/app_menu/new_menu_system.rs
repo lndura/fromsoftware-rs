@@ -2,7 +2,7 @@ use std::{borrow::Cow, ptr::NonNull, sync::atomic::AtomicI32};
 
 use shared::{FromStatic, OwnedPtr, Subclass, Superclass, UnknownPtr, UnknownStruct};
 
-use crate::{DLVector, dlkr::DLAllocatorBase, dlut::DLFixedVector, rva, sprj::SprjScaleformValue};
+use crate::{DLVector, dlkr::DLAllocator, dlut::DLFixedVector, rva, sprj::SprjScaleformValue};
 
 #[repr(C)]
 // Source of name: RTTI
@@ -77,7 +77,7 @@ pub struct MenuWindow {
     _scene_obj_proxy_1: SceneObjProxy,
     _scene_obj_proxy_2: SceneObjProxy,
     _unk218: u64,
-    _allocator: NonNull<DLAllocatorBase>,
+    _allocator: NonNull<DLAllocator>,
     _unk228: u64,
     _unk230: u64,
     _unk238: u64,

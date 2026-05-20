@@ -2,7 +2,7 @@ use std::ptr::NonNull;
 
 use bitfield::bitfield;
 
-use crate::dlkr::DLAllocatorBase;
+use crate::dlkr::DLAllocator;
 use crate::fd4::FD4BasicHashString;
 use shared::{Subclass, Superclass};
 
@@ -84,7 +84,7 @@ where
     vftable: usize,
 
     /// The allocator used to expand this if necessary while adding data.
-    pub allocator: NonNull<DLAllocatorBase>,
+    pub allocator: NonNull<DLAllocator>,
 
     /// A pointer to the repository that owns this holder.
     pub owning_repository: Option<NonNull<FD4ResRep>>,

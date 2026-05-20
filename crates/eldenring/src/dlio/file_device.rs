@@ -9,7 +9,7 @@ use vtable_rs::VPtr;
 use crate::{
     DLVector,
     dlio::DLIOResult,
-    dlkr::{DLAllocatorBase, DLPlainLightMutex},
+    dlkr::{DLAllocator, DLPlainLightMutex},
     dltx::DLString,
     dlut::DLDateTime,
 };
@@ -45,7 +45,7 @@ pub trait DLFileDeviceVmt {
         path_dlstring: &DLString,
         path_u16: *const u16,
         operator_container: &mut DLFileOperatorContainer,
-        allocator: &mut DLAllocatorBase,
+        allocator: &mut DLAllocator,
         is_temp_file: bool,
     ) -> *const DLFileOperatorBase;
 
@@ -243,7 +243,7 @@ impl Display for DLFileOperatorIOState {
 pub struct DLFileOperatorBase<T: DLFileOperatorVmt = AdapterFileOperator<Cursor<Vec<u8>>>> {
     pub vftable: VPtr<dyn DLFileOperatorVmt, T>,
     /// Allocator passed to constructor, used for all memory operations
-    pub allocator: NonNull<DLAllocatorBase>,
+    pub allocator: NonNull<DLAllocator>,
     /// Result of latest operation involving this file operator
     pub result: DLIOResult,
     // _pad14: u32,
@@ -267,7 +267,7 @@ where
 {
     pub fn new(
         vftable: VPtr<dyn DLFileOperatorVmt, T>,
-        allocator: &DLAllocatorBase,
+        allocator: &DLAllocator,
         path: &DLString,
         operator_container: &DLFileOperatorContainer,
         file_device: &DLFileDeviceBase,
@@ -305,7 +305,7 @@ pub struct BndEntry {
 
 #[repr(C)]
 pub struct DLFileOperatorContainer {
-    allocator: NonNull<DLAllocatorBase>,
+    allocator: NonNull<DLAllocator>,
     read_file_operator: OwnedPtr<DLFileOperatorBase>,
     write_file_operator: OwnedPtr<DLFileOperatorBase>,
     flags: u32,
@@ -334,7 +334,7 @@ impl DLFileDeviceVmt for DLFileDeviceBase {
         name_dlstring: &DLString,
         name_u16: *const u16,
         operator_container: &mut DLFileOperatorContainer,
-        allocator: &mut DLAllocatorBase,
+        allocator: &mut DLAllocator,
         is_temp_file: bool,
     ) -> *const DLFileOperatorBase {
         (self.vftable.get_file_operator)(
@@ -374,7 +374,7 @@ where
     R: Read + Seek + 'static,
 {
     pub fn new(
-        allocator: &DLAllocatorBase,
+        allocator: &DLAllocator,
         path: &DLString,
         operator_container: &DLFileOperatorContainer,
         file_device: &DLFileDeviceBase,

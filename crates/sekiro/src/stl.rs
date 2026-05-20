@@ -1,17 +1,11 @@
 use std::{ffi::c_void, ptr::NonNull};
 
-use crate::dlkr::DLAllocatorBase;
+use crate::dlkr::DLAllocator;
 
 #[derive(Clone)]
 #[repr(transparent)]
-/// Special type to use in std types.
-pub struct DLAllocatorForStl(NonNull<DLAllocatorBase>);
-
-impl From<NonNull<DLAllocatorBase>> for DLAllocatorForStl {
-    fn from(ptr: NonNull<DLAllocatorBase>) -> Self {
-        Self(ptr)
-    }
-}
+/// Special type to use in MSVC STL collections.
+pub struct DLAllocatorForStl(NonNull<DLAllocator>);
 
 impl fromsoftware_shared_stl::StlAllocator for DLAllocatorForStl {
     unsafe fn allocate_raw(&mut self, size: usize, align: usize) -> *mut c_void {

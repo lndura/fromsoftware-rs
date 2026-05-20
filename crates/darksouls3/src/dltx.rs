@@ -5,7 +5,7 @@ use std::ptr::NonNull;
 use encoding_rs;
 use thiserror::Error;
 
-use crate::dlkr::DLAllocatorBase;
+use crate::dlkr::DLAllocator;
 
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Default)]
@@ -129,7 +129,7 @@ pub struct DLString<T: DLStringKind = DLUTF16StringKind> {
     text: DLStringText<T>,
     length: usize,
     capacity: usize,
-    allocator: NonNull<DLAllocatorBase>,
+    allocator: NonNull<DLAllocator>,
     encoding: DLCharacterSet,
 }
 

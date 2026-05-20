@@ -4,7 +4,7 @@ use shared::{FromStatic, OwnedPtr};
 
 use vtable_rs::VPtr;
 
-use crate::{DLVector, dlkr::DLAllocatorBase, rva};
+use crate::{DLVector, dlkr::DLAllocator, rva};
 
 #[vtable_rs::vtable]
 pub trait DLCipherKeyVmt {
@@ -205,7 +205,7 @@ pub struct OpenSslAesCipher {
     /// Key usage type: Default=1
     /// See [KeyUsageType] enum
     pub key_usage: u32,
-    pub allocator: NonNull<DLAllocatorBase>,
+    pub allocator: NonNull<DLAllocator>,
     evp_cipher: usize,
     evp_cipher_ctx: usize,
     pub requires_iv: bool,
@@ -226,7 +226,7 @@ pub struct OpenSslRsaCipher {
     pub padding_mode: u32,
     /// Block size in bytes
     pub block_size: u32,
-    pub allocator: NonNull<DLAllocatorBase>,
+    pub allocator: NonNull<DLAllocator>,
     /// Whether the key is public or private
     pub use_public_key: bool,
     bio: usize,
@@ -252,13 +252,13 @@ pub trait DLCipherSPIVmt {
         &self,
         params: &CipherInitParams,
         key: &DLCipherKey,
-        allocator: &DLAllocatorBase,
+        allocator: &DLAllocator,
     ) -> Option<NonNull<DLDecrypter>>;
     fn get_encrypter(
         &self,
         params: &CipherInitParams,
         key: &DLCipherKey,
-        allocator: &DLAllocatorBase,
+        allocator: &DLAllocator,
     ) -> usize;
 }
 
@@ -275,7 +275,7 @@ pub trait DLKeyGeneratorSPIVmt {
         params: &CryptoKeyParams,
         key: &str,
         key_len: u32,
-        allocator: &DLAllocatorBase,
+        allocator: &DLAllocator,
     ) -> Option<NonNull<DLCipherKey>>;
 }
 
@@ -295,7 +295,7 @@ impl CryptoSPIRegistry {
         &self,
         params: &CipherInitParams,
         key: &DLCipherKey,
-        allocator: &DLAllocatorBase,
+        allocator: &DLAllocator,
     ) -> Option<NonNull<DLDecrypter>> {
         if !params.is_valid() {
             return None;
@@ -315,7 +315,7 @@ impl CryptoSPIRegistry {
         &self,
         params: &CryptoKeyParams,
         rsa_key: &str,
-        allocator: &DLAllocatorBase,
+        allocator: &DLAllocator,
     ) -> Option<NonNull<DLCipherKey>> {
         if !params.is_valid() {
             return None;
