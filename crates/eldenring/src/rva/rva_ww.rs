@@ -98,7 +98,7 @@ pub const RVAS: RvaBundle = RvaBundle {
     msb_repository_vmt: 0x2ba7250,
     multiplay_properties: 0x3b11230,
     near_enemy_finder_vmt: 0x2a252c0,
-    obtain_dl_user_input_manager: 0x132950,
+    obtain_dl_user_input_manager: 0x1328d0,
     open_field_chr_set_vmt: 0x2a485a0,
     pad_device_vmt: 0x30c9f08,
     param_res_cap_vmt: 0x2baf908,
