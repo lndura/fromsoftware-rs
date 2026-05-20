@@ -188,12 +188,12 @@ impl CSEzDraw {
 #[repr(C)]
 pub struct FD4HkEzDrawCommandBuffer {
     vftable: usize,
-    pub buffer_allocator: NonNull<DLAllocator>,
+    pub buffer_allocator: &'static DLAllocator,
     pub initial_size: usize,
     pub capacity: usize,
     pub buffer_start: NonNull<u8>,
     pub write_ptr: NonNull<u8>,
-    pub draw_state_allocator: NonNull<DLAllocator>,
+    pub draw_state_allocator: &'static DLAllocator,
     pub ez_draw_context: NonNull<FD4HkEzDrawContext>,
     pub ez_draw_state: OwnedPtr<FD4HkEzDrawState>,
 }
@@ -207,7 +207,7 @@ pub struct FD4HkEzDrawContext {
     unk20: usize,
     unk28: bool,
     unk2c: u32,
-    unk30: NonNull<DLAllocator>,
+    unk30: &'static DLAllocator,
 }
 
 #[repr(C)]

@@ -1,6 +1,5 @@
 use std::borrow::Cow;
 use std::fmt::Display;
-use std::ptr::NonNull;
 
 use encoding_rs;
 use thiserror::Error;
@@ -129,7 +128,7 @@ pub struct DLString<T: DLStringKind = DLUTF16StringKind> {
     text: DLStringText<T>,
     length: usize,
     capacity: usize,
-    allocator: NonNull<DLAllocator>,
+    allocator: &'static DLAllocator,
     encoding: DLCharacterSet,
 }
 

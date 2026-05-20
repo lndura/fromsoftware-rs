@@ -1,6 +1,6 @@
 use std::ptr::NonNull;
 
-use crate::dlkr::DLAllocatorBase;
+use crate::dlkr::DLAllocator;
 
 use super::FD4BasicHashString;
 use shared::{Subclass, Superclass};
@@ -66,7 +66,7 @@ where
     vftable: usize,
 
     /// The allocator used to expand this if necessary while adding data.
-    pub allocator: NonNull<DLAllocatorBase>,
+    pub allocator: &'static DLAllocator,
 
     _unk10: u64,
     _unk18: u32,

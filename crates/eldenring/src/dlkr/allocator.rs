@@ -1,4 +1,8 @@
+use pelite::pe64::Pe;
+use shared::Program;
 use vtable_rs::VPtr;
+
+use crate::rva;
 
 #[vtable_rs::vtable]
 pub trait DLAllocatorVmt {
@@ -63,4 +67,18 @@ pub trait DLAllocatorVmt {
 
 pub struct DLAllocator {
     pub vftable: VPtr<dyn DLAllocatorVmt, Self>,
+}
+
+impl DLAllocator {
+    /// Returns the global instance of DLAllocator that uses the
+    /// standard MSVC malloc()/free() implementation for heap management
+    pub fn runtime_heap_allocator() -> &'static Self {
+        unsafe {
+            let va = Program::current()
+                .rva_to_va(rva::get().runtime_heap_allocator)
+                .expect("RuntimeHeapAllocator not found!")
+                as *const *const Self;
+            &**va
+        }
+    }
 }

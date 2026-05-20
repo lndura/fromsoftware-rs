@@ -91,7 +91,7 @@ pub struct CSSessionManager {
     unk30: usize,
     map_active_synchronizer: usize,
     voice_chat_manager: usize,
-    allocator: NonNull<DLAllocator>,
+    allocator: &'static DLAllocator,
     unk50: NonNull<Self>,
     unk58: u32,
     unk5c: u32,
@@ -175,7 +175,7 @@ pub struct CSSessionManager {
     unk328: i32,
     unk32c: u32,
     /// Next fields seem to be some collection?
-    unk330: NonNull<DLAllocator>,
+    unk330: &'static DLAllocator,
     unk338: Option<OwnedPtr<()>>,
     unk340: u32,
     unk344: u32,

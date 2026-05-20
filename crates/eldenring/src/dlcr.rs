@@ -205,7 +205,7 @@ pub struct OpenSslAesCipher {
     /// Key usage type: Default=1
     /// See [KeyUsageType] enum
     pub key_usage: u32,
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
     evp_cipher: usize,
     evp_cipher_ctx: usize,
     pub requires_iv: bool,
@@ -226,7 +226,7 @@ pub struct OpenSslRsaCipher {
     pub padding_mode: u32,
     /// Block size in bytes
     pub block_size: u32,
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
     /// Whether the key is public or private
     pub use_public_key: bool,
     bio: usize,

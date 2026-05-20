@@ -5,7 +5,7 @@ use crate::dlui::DynamicBitset;
 /// Source of name: RTTI
 pub struct DLUserInputDevice {
     _vftable: usize,
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
     _unk10: [u8; 0x50],
     pub extensions: DLVector<usize>,
 }

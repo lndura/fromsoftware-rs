@@ -243,7 +243,7 @@ impl Display for DLFileOperatorIOState {
 pub struct DLFileOperatorBase<T: DLFileOperatorVmt = AdapterFileOperator<Cursor<Vec<u8>>>> {
     pub vftable: VPtr<dyn DLFileOperatorVmt, T>,
     /// Allocator passed to constructor, used for all memory operations
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
     /// Result of latest operation involving this file operator
     pub result: DLIOResult,
     // _pad14: u32,
@@ -267,12 +267,11 @@ where
 {
     pub fn new(
         vftable: VPtr<dyn DLFileOperatorVmt, T>,
-        allocator: &DLAllocator,
+        allocator: &'static DLAllocator,
         path: &DLString,
         operator_container: &DLFileOperatorContainer,
         file_device: &DLFileDeviceBase,
     ) -> Self {
-        let allocator = NonNull::from(allocator);
         Self {
             vftable,
             allocator,
@@ -280,8 +279,7 @@ where
             owning_operator_container: NonNull::from(operator_container),
             io_state: DLFileOperatorIOState::default(),
             owning_file_device: NonNull::from(file_device),
-            path: DLString::transcode_from(path, allocator.into())
-                .expect("Failed to copy DLString"),
+            path: DLString::transcode_from(path, allocator).expect("Failed to copy DLString"),
         }
     }
 }
@@ -305,7 +303,7 @@ pub struct BndEntry {
 
 #[repr(C)]
 pub struct DLFileOperatorContainer {
-    allocator: NonNull<DLAllocator>,
+    allocator: &'static DLAllocator,
     read_file_operator: OwnedPtr<DLFileOperatorBase>,
     write_file_operator: OwnedPtr<DLFileOperatorBase>,
     flags: u32,
@@ -374,7 +372,7 @@ where
     R: Read + Seek + 'static,
 {
     pub fn new(
-        allocator: &DLAllocator,
+        allocator: &'static DLAllocator,
         path: &DLString,
         operator_container: &DLFileOperatorContainer,
         file_device: &DLFileDeviceBase,
@@ -420,8 +418,8 @@ where
         self.base.io_state.0 &= 0xfffffff9;
         self.base.io_state.0 |= (((param_4 as u32 & 1) * 2) | (param_3 as u32 & 1)) * 2;
 
-        self.base.path = DLString::transcode_from(path, self.base.allocator.into())
-            .expect("Failed to copy DLString");
+        self.base.path =
+            DLString::transcode_from(path, self.base.allocator).expect("Failed to copy DLString");
 
         true
     }

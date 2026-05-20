@@ -84,7 +84,7 @@ where
     vftable: usize,
 
     /// The allocator used to expand this if necessary while adding data.
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
 
     /// A pointer to the repository that owns this holder.
     pub owning_repository: Option<NonNull<FD4ResRep>>,

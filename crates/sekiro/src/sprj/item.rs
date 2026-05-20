@@ -1,5 +1,4 @@
 use std::alloc::{Layout, LayoutError, alloc_zeroed};
-use std::ptr::NonNull;
 use std::{borrow::Cow, fmt, ops, ptr, sync::LazyLock};
 
 use pelite::pe64::Pe;
@@ -37,7 +36,7 @@ pub struct MapItemMan {
     _unk130: u8,
     _unk134: u32,
     _unk138: u32,
-    _unk140: NonNull<DLAllocator>,
+    _unk140: &'static DLAllocator,
     _unk148: u64,
     _unk150: u64,
     _unk158: u32,

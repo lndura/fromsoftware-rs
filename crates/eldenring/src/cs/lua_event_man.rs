@@ -165,7 +165,7 @@ pub struct CSDeathRestartEvent {
 pub struct CSLuaEventProxy {
     vftable: usize,
     pub lua_event_script_imitation_class: NonNull<DLRuntimeClassImpl>,
-    unk10: NonNull<DLAllocator>,
+    unk10: &'static DLAllocator,
     unk18: [u8; 0x18],
     pub lua_event_msg_map: CSLuaEventMsgMap,
     /// Dummy field for the packet broadcast

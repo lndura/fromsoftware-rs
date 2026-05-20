@@ -24,7 +24,7 @@ pub struct FD4StepTemplateBase<Subject, Base, States: StepperStates> {
     unk48: u8,
 
     // Seemingly all debug stuff after this point.
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
     unk58: usize,
     unk60: i8,
     unk61: bool,
@@ -61,7 +61,7 @@ pub struct StepperFn<T> {
 pub struct FD4ComponentAttachSystem {
     vftable: *const (),
     unk8: UnkDLTree<()>,
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
 }
 
 /// Source of name: RTTI
@@ -69,5 +69,5 @@ pub struct FD4ComponentAttachSystem {
 #[repr(C)]
 pub struct FD4ComponentAttachSystem_Step {
     pub base: FD4ComponentAttachSystem,
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
 }

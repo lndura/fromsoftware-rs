@@ -8,7 +8,7 @@ use crate::dlui::DLUserInputDeviceImpl;
 pub struct DLUserInputManager {
     _vftable: usize,
     pub mutex: DLPlainLightMutex,
-    pub allocator: NonNull<DLAllocator>,
+    pub allocator: &'static DLAllocator,
     _unk48: u64,
     _unk50: DLVector<u64>,
     _unk70: DLVector<u64>,

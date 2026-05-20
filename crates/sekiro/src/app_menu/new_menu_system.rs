@@ -77,7 +77,7 @@ pub struct MenuWindow {
     _scene_obj_proxy_1: SceneObjProxy,
     _scene_obj_proxy_2: SceneObjProxy,
     _unk218: u64,
-    _allocator: NonNull<DLAllocator>,
+    _allocator: &'static DLAllocator,
     _unk228: u64,
     _unk230: u64,
     _unk238: u64,

@@ -8,7 +8,7 @@ use encoding_rs::DecoderResult;
 use fromsoftware_shared_stl::{BasicString, CodeUnit};
 use thiserror::Error;
 
-use crate::DLAllocatorForStl;
+use crate::dlkr::DLAllocator;
 
 #[repr(u8)]
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Default)]
@@ -226,7 +226,7 @@ fn bytes_eq_str(bytes: &[u8], enc: DLCharacterSet, other: &str) -> bool {
 
 #[repr(C)]
 pub struct DLString<T: DLStringKind = DLUTF16StringKind> {
-    base: BasicString<T::Unit, DLAllocatorForStl>,
+    base: BasicString<T::Unit, &'static DLAllocator>,
     encoding: DLCharacterSet,
 }
 
@@ -235,7 +235,7 @@ impl<T: DLStringKind> DLString<T> {
         T::decode(self.as_bytes())
     }
 
-    pub fn new(allocator: DLAllocatorForStl) -> Self {
+    pub fn new(allocator: &'static DLAllocator) -> Self {
         Self {
             base: BasicString::new_in(allocator),
             encoding: T::ENCODING,
@@ -244,7 +244,7 @@ impl<T: DLStringKind> DLString<T> {
 
     pub fn from_str(
         s: impl AsRef<str>,
-        allocator: DLAllocatorForStl,
+        allocator: &'static DLAllocator,
     ) -> Result<Self, DLStringError> {
         let units = T::encode(s.as_ref())?;
         Ok(Self {
@@ -273,7 +273,7 @@ impl<T: DLStringKind> DLString<T> {
     /// through UTF-8
     pub fn transcode_from<U: DLStringKind>(
         other: &DLString<U>,
-        allocator: DLAllocatorForStl,
+        allocator: &'static DLAllocator,
     ) -> Result<Self, DLStringError> {
         if T::ENCODING == U::ENCODING {
             // Safety: T::Unit and U::Unit are guaranteed to be the same here
@@ -327,7 +327,7 @@ impl<T: DLStringKind> DLString<T> {
         &self,
         from: impl AsRef<str>,
         to: impl AsRef<str>,
-        allocator: DLAllocatorForStl,
+        allocator: &'static DLAllocator,
     ) -> Result<Self, DLStringError> {
         Self::from_str(
             self.to_string()?.replace(from.as_ref(), to.as_ref()),
@@ -340,7 +340,7 @@ impl<T: DLStringKind> DLString<T> {
         &self,
         from: impl AsRef<str>,
         to: impl AsRef<str>,
-        allocator: DLAllocatorForStl,
+        allocator: &'static DLAllocator,
     ) -> Result<Self, DLStringError> {
         Self::from_str(
             self.to_string()?.replacen(from.as_ref(), to.as_ref(), 1),
@@ -352,39 +352,39 @@ impl<T: DLStringKind> DLString<T> {
     pub fn split_str(
         &self,
         delimiter: impl AsRef<str>,
-        allocator: DLAllocatorForStl,
+        allocator: &'static DLAllocator,
     ) -> Result<Vec<Self>, DLStringError> {
         self.to_string()?
             .split(delimiter.as_ref())
-            .map(|part| Self::from_str(part, allocator.clone()))
+            .map(|part| Self::from_str(part, allocator))
             .collect()
     }
 
     /// Returns a new `DLString` with leading and trailing whitespace removed
-    pub fn trim_str(&self, allocator: DLAllocatorForStl) -> Result<Self, DLStringError> {
+    pub fn trim_str(&self, allocator: &'static DLAllocator) -> Result<Self, DLStringError> {
         Self::from_str(self.to_string()?.trim(), allocator)
     }
 
     /// Returns a new `DLString` with the content uppercased (Unicode-aware)
-    pub fn to_uppercase_str(&self, allocator: DLAllocatorForStl) -> Result<Self, DLStringError> {
+    pub fn to_uppercase_str(&self, allocator: &'static DLAllocator) -> Result<Self, DLStringError> {
         Self::from_str(self.to_string()?.to_uppercase(), allocator)
     }
 
     /// Returns a new `DLString` with the content lowercased (Unicode-aware)
-    pub fn to_lowercase_str(&self, allocator: DLAllocatorForStl) -> Result<Self, DLStringError> {
+    pub fn to_lowercase_str(&self, allocator: &'static DLAllocator) -> Result<Self, DLStringError> {
         Self::from_str(self.to_string()?.to_lowercase(), allocator)
     }
 }
 
-impl<T: DLStringKind> TryFrom<(&str, DLAllocatorForStl)> for DLString<T> {
+impl<T: DLStringKind> TryFrom<(&str, &'static DLAllocator)> for DLString<T> {
     type Error = DLStringError;
-    fn try_from((s, alloc): (&str, DLAllocatorForStl)) -> Result<Self, Self::Error> {
+    fn try_from((s, alloc): (&str, &'static DLAllocator)) -> Result<Self, Self::Error> {
         Self::from_str(s, alloc)
     }
 }
 
 impl<T: DLStringKind> Deref for DLString<T> {
-    type Target = BasicString<T::Unit, DLAllocatorForStl>;
+    type Target = BasicString<T::Unit, &'static DLAllocator>;
 
     fn deref(&self) -> &Self::Target {
         &self.base
