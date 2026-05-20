@@ -107,7 +107,7 @@ where
     /// slice does not fit in the SSO buffer.
     ///
     /// Equivalent to `std::basic_string<C>(ptr, len, allocator)`
-    pub fn from_units_in(chars: impl AsRef<[C]>, mut allocator: A) -> Self {
+    pub fn from_units_in(chars: impl AsRef<[C]>, allocator: A) -> Self {
         let chars = chars.as_ref();
         let len = chars.len();
 

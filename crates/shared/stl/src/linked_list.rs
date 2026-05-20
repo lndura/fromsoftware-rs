@@ -33,7 +33,7 @@ impl<T, A: StlAllocator> List<T, A> {
     /// Creates an empty list backed by `allocator`.
     ///
     /// Equivalent to `std::list<T>()` with a custom allocator
-    pub fn new_in(mut allocator: A) -> Self {
+    pub fn new_in(allocator: A) -> Self {
         // Allocate the sentinel head node. Its value is never initialized
         let head = allocator.allocate::<Node<T>>();
         unsafe {

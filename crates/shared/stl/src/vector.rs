@@ -42,7 +42,7 @@ impl<T, A: StlAllocator> Vector<T, A> {
     }
 
     /// Creates a vector from a slice, copying all elements into it
-    pub fn from_slice_in(items: &[T], mut allocator: A) -> Self
+    pub fn from_slice_in(items: &[T], allocator: A) -> Self
     where
         T: Copy,
     {
