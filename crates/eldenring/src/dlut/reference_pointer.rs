@@ -4,7 +4,7 @@ use std::{
     sync::atomic::{AtomicU32, Ordering},
 };
 
-use fromsoftware_shared_stl::Allocator;
+use fromsoftware_shared_stl::StlAllocator;
 use vtable_rs::VPtr;
 
 use crate::DLAllocatorForStl;

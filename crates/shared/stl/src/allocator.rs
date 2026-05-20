@@ -4,7 +4,8 @@ use std::{
     ptr::NonNull,
 };
 
-pub trait Allocator: Clone {
+/// Special trait for use in MSVC STL collections.
+pub trait StlAllocator: Clone {
     /// # Safety
     ///
     /// `size` must be non-zero. `align` must be a power of two.
@@ -19,7 +20,7 @@ pub trait Allocator: Clone {
     /// `T` must not be a zero-sized type.
     fn allocate<T>(&mut self) -> NonNull<T> {
         unsafe { NonNull::new(self.allocate_raw(size_of::<T>(), align_of::<T>()) as _) }
-            .expect("Allocator returned null pointer")
+            .expect("StlAllocator returned null pointer")
     }
 
     /// Allocates `count` elemets. Panics if `count` is zero
@@ -33,7 +34,7 @@ pub trait Allocator: Clone {
 
         let ptr = unsafe { self.allocate_raw(size, align_of::<T>()).cast::<T>() };
         if ptr.is_null() {
-            panic!("Allocator returned null pointer")
+            panic!("StlAllocator returned null pointer")
         }
 
         // Safety: ptr is non-null and we own `count` elements

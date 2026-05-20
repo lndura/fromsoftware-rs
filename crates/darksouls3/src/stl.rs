@@ -13,11 +13,10 @@ impl From<NonNull<DLAllocatorBase>> for DLAllocatorForStl {
     }
 }
 
-impl fromsoftware_shared_stl::Allocator for DLAllocatorForStl {
-    unsafe fn allocate_raw(&mut self, size: usize, allign: usize) -> *mut c_void {
-        let allocator = self.0.as_ptr();
-        let allocation =
-            unsafe { ((*allocator).vftable.allocate_aligned)(&mut *allocator, size, allign) };
+impl fromsoftware_shared_stl::StlAllocator for DLAllocatorForStl {
+    unsafe fn allocate_raw(&mut self, size: usize, align: usize) -> *mut c_void {
+        let allocator = unsafe { self.0.as_mut() };
+        let allocation = (allocator.vftable.allocate_aligned)(allocator, size, align);
         if allocation.is_null() {
             panic!("DLAllocator returned null pointer")
         }
@@ -25,10 +24,8 @@ impl fromsoftware_shared_stl::Allocator for DLAllocatorForStl {
     }
 
     unsafe fn deallocate_raw(&mut self, ptr: *mut c_void) {
-        let allocator = self.0.as_ptr();
-        unsafe {
-            ((*allocator).vftable.deallocate)(&mut *allocator, ptr as _);
-        }
+        let allocator = unsafe { self.0.as_mut() };
+        (allocator.vftable.deallocate)(allocator, ptr as _);
     }
 }
 
