@@ -139,7 +139,7 @@ pub struct PadDevice {
     /// `WORD` bitfield of `XInputGetState()`'s wButtons field.
     pub w_buttons: WButtons,
     // unk892: u16,
-    /// Index of the user's controller. Can be a value from 0 to 3.
+    /// Index of the user's controller. Can be 0..4.
     pub dw_user_index: i32,
     unk898: [u8; 4],
     pub s_thumb_lx: f32,
@@ -268,10 +268,9 @@ impl KeyboardDevice {
 
 /// Source: <https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bb321074(v=vs.85)>
 #[repr(u8)]
-#[allow(nonstandard_style)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum DIKey {
-    ESCAPE = 0x01,
+    Escape = 0x01,
     _1 = 0x02,
     _2 = 0x03,
     _3 = 0x04,
@@ -283,11 +282,11 @@ pub enum DIKey {
     _9 = 0x0A,
     _0 = 0x0B,
     /// - on main keyboard
-    MINUS = 0x0C,
-    EQUALS = 0x0D,
+    Minus = 0x0C,
+    Equals = 0x0D,
     /// backspace
-    BACK = 0x0E,
-    TAB = 0x0F,
+    Back = 0x0E,
+    Tab = 0x0F,
     _Q = 0x10,
     _W = 0x11,
     _E = 0x12,
@@ -298,11 +297,11 @@ pub enum DIKey {
     _I = 0x17,
     _O = 0x18,
     _P = 0x19,
-    LBRACKET = 0x1A,
-    RBRACKET = 0x1B,
+    LBRacket = 0x1A,
+    RBRacket = 0x1B,
     /// Enter on main keyboard
-    RETURN = 0x1C,
-    LCONTROL = 0x1D,
+    Return = 0x1C,
+    LControl = 0x1D,
     _A = 0x1E,
     _S = 0x1F,
     _D = 0x20,
@@ -312,12 +311,12 @@ pub enum DIKey {
     _J = 0x24,
     _K = 0x25,
     _L = 0x26,
-    SEMICOLON = 0x27,
-    APOSTROPHE = 0x28,
+    Semicolon = 0x27,
+    Apostrophe = 0x28,
     /// accent grave
-    GRAVE = 0x29,
-    LSHIFT = 0x2A,
-    BACKSLASH = 0x2B,
+    Grave = 0x29,
+    LShift = 0x2A,
+    Backslash = 0x2B,
     _Z = 0x2C,
     _X = 0x2D,
     _C = 0x2E,
@@ -325,18 +324,18 @@ pub enum DIKey {
     _B = 0x30,
     _N = 0x31,
     _M = 0x32,
-    COMMA = 0x33,
+    Comma = 0x33,
     /// . on main keyboard
-    PERIOD = 0x34,
+    Period = 0x34,
     /// / on main keyboard   
-    SLASH = 0x35,
-    RSHIFT = 0x36,
+    Slash = 0x35,
+    RShift = 0x36,
     /// * on numeric keypad
-    MULTIPLY = 0x37,
+    Multiply = 0x37,
     /// left Alt   
-    LMENU = 0x38,
-    SPACE = 0x39,
-    CAPITAL = 0x3A,
+    LMenu = 0x38,
+    Space = 0x39,
+    Capital = 0x3A,
     F1 = 0x3B,
     F2 = 0x3C,
     F3 = 0x3D,
@@ -347,112 +346,112 @@ pub enum DIKey {
     F8 = 0x42,
     F9 = 0x43,
     F10 = 0x44,
-    NUMLOCK = 0x45,
+    Numlock = 0x45,
     /// Scroll Lock
-    SCROLL = 0x46,
-    NUMPAD7 = 0x47,
-    NUMPAD8 = 0x48,
-    NUMPAD9 = 0x49,
+    Scroll = 0x46,
+    Numpad7 = 0x47,
+    Numpad8 = 0x48,
+    Numpad9 = 0x49,
     /// - on numeric keypad
     SUBTRACT = 0x4A,
-    NUMPAD4 = 0x4B,
-    NUMPAD5 = 0x4C,
-    NUMPAD6 = 0x4D,
+    Numpad4 = 0x4B,
+    Numpad5 = 0x4C,
+    Numpad6 = 0x4D,
     /// + on numeric keypad
     ADD = 0x4E,
-    NUMPAD1 = 0x4F,
-    NUMPAD2 = 0x50,
-    NUMPAD3 = 0x51,
-    NUMPAD0 = 0x52,
+    Numpad1 = 0x4F,
+    Numpad2 = 0x50,
+    Numpad3 = 0x51,
+    Numpad0 = 0x52,
     /// . on numeric keypad
-    DECIMAL = 0x53,
+    Decimal = 0x53,
     /// <> or \| on RT 102-key keyboard (Non-U.S.)     
-    OEM_102 = 0x56,
+    Oem102 = 0x56,
     F11 = 0x57,
     F12 = 0x58,
     F13 = 0x64,
     F14 = 0x65,
     F15 = 0x66,
     /// (Japanese keyboard)  
-    KANA = 0x70,
+    Kana = 0x70,
     /// /? on Brazilian keyboard               
-    ABNT_C1 = 0x73,
+    AbntC1 = 0x73,
     /// (Japanese keyboard)
-    CONVERT = 0x79,
+    Convert = 0x79,
     /// (Japanese keyboard)            
-    NOCONVERT = 0x7B,
+    NoConvert = 0x7B,
     /// (Japanese keyboard)         
-    YEN = 0x7D,
+    Yen = 0x7D,
     /// Numpad . on Brazilian keyboard             
-    ABNT_C2 = 0x7E,
+    AbntC2 = 0x7E,
     /// = on numeric keypad
-    NUMPADEQUALS = 0x8D,
+    NumpadEquals = 0x8D,
     /// Previous Track (CIRCUMFLEX on Japanese keyboard)   
-    PREVTRACK = 0x90,
+    PrevTrack = 0x90,
     AT = 0x91,
-    COLON = 0x92,
-    UNDERLINE = 0x93,
+    Colon = 0x92,
+    Underline = 0x93,
     /// (Japanese keyboard)   
-    KANJI = 0x94,
-    STOP = 0x95,
+    Kanji = 0x94,
+    Stop = 0x95,
     AX = 0x96,
-    UNLABELED = 0x97,
-    NEXTTRACK = 0x99,
+    UnLabeled = 0x97,
+    NextTrack = 0x99,
     /// Enter on numeric keypad  
-    NUMPADENTER = 0x9C,
-    RCONTROL = 0x9D,
-    MUTE = 0xA0,
-    CALCULATOR = 0xA1,
-    PLAYPAUSE = 0xA2,
-    MEDIASTOP = 0xA4,
-    VOLUMEDOWN = 0xAE,
-    VOLUMEUP = 0xB0,
-    WEBHOME = 0xB2,
+    NumpadENTER = 0x9C,
+    RControl = 0x9D,
+    Mute = 0xA0,
+    Calculator = 0xA1,
+    PlayPause = 0xA2,
+    MediaStop = 0xA4,
+    VolumeDown = 0xAE,
+    VolumeUp = 0xB0,
+    WebHome = 0xB2,
     /// , on numeric keypad
-    NUMPADCOMMA = 0xB3,
+    NumpadComma = 0xB3,
     /// / on numeric keypad
-    DIVIDE = 0xB5,
+    Divide = 0xB5,
     SYSRQ = 0xB7,
     /// right Alt
-    RMENU = 0xB8,
-    PAUSE = 0xC5,
+    Rmenu = 0xB8,
+    Pause = 0xC5,
     /// Home on arrow keypad
-    HOME = 0xC7,
+    Home = 0xC7,
     // UpArrow on arrow keypad
-    UP = 0xC8,
+    Up = 0xC8,
     /// PgUp on arrow keypad
-    PRIOR = 0xC9,
+    Prior = 0xC9,
     /// LeftArrow on arrow keypad
-    LEFT = 0xCB,
+    Left = 0xCB,
     /// RightArrow on arrow keypad
-    RIGHT = 0xCD,
+    Right = 0xCD,
     /// End on arrow keypad
-    END = 0xCF,
+    End = 0xCF,
     /// DownArrow on arrow keypad
-    DOWN = 0xD0,
+    Down = 0xD0,
     // PgDn on arrow keypad
-    NEXT = 0xD1,
+    Next = 0xD1,
     /// Insert on arrow keypad
-    INSERT = 0xD2,
+    Insert = 0xD2,
     /// Delete on arrow keypad
-    DELETE = 0xD3,
+    Delete = 0xD3,
     /// Left Windows key
-    LWIN = 0xDB,
+    LWin = 0xDB,
     /// Right Windows key
-    RWIN = 0xDC,
-    APPS = 0xDD,
-    POWER = 0xDE,
-    SLEEP = 0xDF,
-    WAKE = 0xE3,
-    WEBSEARCH = 0xE5,
-    WEBFAVORITES = 0xE6,
-    WEBREFRESH = 0xE7,
-    WEBSTOP = 0xE8,
-    WEBFORWARD = 0xE9,
-    WEBBACK = 0xEA,
-    MYCOMPUTER = 0xEB,
-    MAIL = 0xEC,
-    MEDIASELECT = 0xED,
+    RWin = 0xDC,
+    Apps = 0xDD,
+    Power = 0xDE,
+    Sleep = 0xDF,
+    Wake = 0xE3,
+    WebSearch = 0xE5,
+    WebFavorites = 0xE6,
+    WebRefresh = 0xE7,
+    WebStop = 0xE8,
+    WebForward = 0xE9,
+    WebBack = 0xEA,
+    MyComputer = 0xEB,
+    Mail = 0xEC,
+    MediaSelect = 0xED,
 }
 
 impl From<DIKey> for usize {

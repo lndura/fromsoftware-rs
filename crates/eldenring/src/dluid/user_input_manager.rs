@@ -32,7 +32,7 @@ pub struct DLUserInputManagerImpl {
     pub is_co_initialized: bool,
     unk889: bool,
     unk88a: bool,
-    /// Disables `IDirectInput8::EnumDevices` from being called
+    /// Disables `IDirectInput8::EnumDevices` from being called.
     pub use_lib_sce_pad: bool,
     unk88c: bool,
     pub is_game_window_focused: bool,
