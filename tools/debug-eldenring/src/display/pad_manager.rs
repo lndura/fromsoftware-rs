@@ -60,9 +60,6 @@ impl DebugDisplay for FD4PadManager {
                 });
             }
         });
-
-        ui.header("CSPad instances", || {});
-
         ui.text(format!(
             "exit_foreground_signaled: {}",
             self.exit_foreground_signaled

@@ -93,28 +93,14 @@ impl FD4PadManager {
         self.get_pad_instance::<CSDebugCamPad>()
     }
     fn get_pad_instance<T: Subclass<CSPad>>(&self) -> Option<&T> {
-        self.pad_entry_map_list
-            .iter()
-            .find_map(|tree: &NonNull<Tree<Pair<usize, PadEntry>>>| {
-                let tree: &Tree<Pair<usize, PadEntry>> = unsafe { tree.as_ref() };
-                tree.iter().find_map(|pair: &mut Pair<usize, PadEntry>| {
-                    let cs_pad = unsafe { pair.value.entry.as_ref() };
-                    cs_pad.as_subclass::<T>()
-                })
+        self.pad_entry_map_list.iter().find_map(|ptr| {
+            let map = unsafe { ptr.as_ref() };
+            map.iter().find_map(|pair| {
+                let cs_pad: &CSPad = unsafe { pair.second.entry.as_ref() };
+                cs_pad.as_subclass::<T>()
             })
+        })
     }
-
-<<<<<<< HEAD
-    fn get_pad_instance<T: Subclass<CSPad>>(&mut self) -> Option<&mut T> {
-        self.pad_entry_map_list.iter_mut().find_map(|ptr| {
-            let map = unsafe { ptr.as_mut() };
-            map.iter_mut().find_map(|pair| {
-                let cs_pad: &mut CSPad = unsafe { pair.second.entry.as_mut() };
-                cs_pad.as_subclass_mut::<T>()
-=======
-    /// Obtains the specific [CSPad] responsible for regular in-game inputs.
-    /// This is polled during the `InGameStep`.
-    /// The rtti for this instance is `CSInGamePad_UserInput1`.
     pub fn get_in_game_pad_mut(&mut self) -> Option<&mut CSInGamePad> {
         self.get_pad_instance_mut::<CSInGamePad>()
     }
@@ -125,15 +111,11 @@ impl FD4PadManager {
         self.get_pad_instance_mut::<CSDebugCamPad>()
     }
     fn get_pad_instance_mut<T: Subclass<CSPad>>(&mut self) -> Option<&mut T> {
-        self.pad_entry_map_list
-            .iter()
-            .find_map(|tree: &NonNull<Tree<Pair<usize, PadEntry>>>| {
-                let tree: &Tree<Pair<usize, PadEntry>> = unsafe { tree.as_ref() };
-                tree.iter().find_map(|pair: &mut Pair<usize, PadEntry>| {
-                    let cs_pad: &mut CSPad = unsafe { pair.value.entry.as_mut() };
-                    cs_pad.as_subclass_mut::<T>()
-                })
->>>>>>> 1a6ced6 (Seperate get & get_mut for CSPad subclasses)
+        self.pad_entry_map_list.iter_mut().find_map(|ptr| {
+            let map = unsafe { ptr.as_mut() };
+            map.iter_mut().find_map(|pair| {
+                let cs_pad: &mut CSPad = unsafe { pair.second.entry.as_mut() };
+                cs_pad.as_subclass_mut::<T>()
             })
         })
     }
