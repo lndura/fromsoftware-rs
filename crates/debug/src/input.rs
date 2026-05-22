@@ -18,9 +18,18 @@ pub struct InputBlocker {
 }
 
 impl InputBlocker {
+    pub const fn new() -> Self {
+        Self {
+            flags: AtomicU8::new(0),
+            hooks_installed: AtomicBool::new(false),
+        }
+    }
+
     pub fn get_instance() -> &'static InputBlocker {
-        // Leak a Box so the original DLL owns the memory, and hotpatch DLLs just point to it
-        INPUT_BLOCKER.get_or_init(|| Box::leak(Box::new(InputBlocker::default())))
+        INPUT_BLOCKER.get_or_init(|| {
+            static INSTANCE: InputBlocker = InputBlocker::new();
+            &INSTANCE
+        })
     }
 
     /// Receives the context from the pre-reload DLL
