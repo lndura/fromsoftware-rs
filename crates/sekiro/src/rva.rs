@@ -30,8 +30,8 @@ impl GameVersion for SekiroGameVersion {
 
 impl SekiroGameVersion {
     const fn rvas(self) -> RvaBundle {
-        // For lack of a better option, we're assuming that (like DS3, unlike
-        // Elden Ring) the RVAs are the same between the worldwide and Japanese
+        // For lack of a better option, we're assuming that (unlike Elden Ring)
+        // the RVAs are the same between the worldwide and Japanese
         // versions, but we haven't actually tested that yet. It's possible
         // we'll need to generate separate Japanese RVAs from a memory dump of
         // the decrypted Japanese executable.

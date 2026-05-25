@@ -4,7 +4,8 @@ use windows::Win32::System::LibraryLoader::GetModuleHandleA;
 use windows::core::PCSTR;
 
 mod bundle;
-mod rva_data;
+mod rva_jp;
+mod rva_ww;
 
 pub use bundle::RvaBundle;
 
@@ -30,13 +31,9 @@ impl GameVersion for DS3GameVersion {
 
 impl DS3GameVersion {
     const fn rvas(self) -> RvaBundle {
-        // For lack of a better option, we're assuming that (like Sekiro, unlike
-        // Elden Ring) the RVAs are the same between the worldwide and Japanese
-        // versions, but we haven't actually tested that yet. It's possible
-        // we'll need to generate separate Japanese RVAs from a memory dump of
-        // the decrypted Japanese executable.
         match self {
-            Self::Ww1152 | Self::Jp11521 => rva_data::RVAS,
+            Self::Ww1152 => rva_ww::RVAS,
+            Self::Jp11521 => rva_jp::RVAS,
         }
     }
 }
