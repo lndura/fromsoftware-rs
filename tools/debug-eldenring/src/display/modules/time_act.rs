@@ -28,8 +28,8 @@ impl DebugDisplay for CSChrTimeActModule {
                 ui.text(entry.anim_length.to_string());
             },
         );
-        ui.display("Read IDX", self.read_idx);
-        ui.display("Write IDX", self.write_idx);
+        ui.display("Read index", self.read_idx);
+        ui.display("Write index", self.write_idx);
         ui.header("Current Anim Info", || {
             let current_anim_info = &self.anim_queue[self.read_idx as usize];
             ui.display("Anim ID", current_anim_info.anim_id);
