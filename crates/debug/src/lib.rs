@@ -5,10 +5,12 @@ use tracing_panic::panic_hook;
 mod clipboard;
 mod display;
 mod ext;
+mod input;
 mod state_map;
 
 pub use clipboard::*;
 pub use ext::*;
+pub use input::*;
 pub use state_map::*;
 
 /// Initializes the debug tool as a DLL plugin, setting up a panic handler,
