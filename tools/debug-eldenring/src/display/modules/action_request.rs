@@ -39,47 +39,29 @@ impl DebugDisplay for CSChrActionRequestModule {
         });
 
         ui.display("Queue Mode Enabled", self.queue_mode_enabled);
-        ui.display("Queue Index Override", self.queue_index_override);
+        ui.display("Queue TAE ID Override", self.queue_tae_id_override);
     }
 }
 
 impl DebugDisplay for ActionRequestQueue {
     fn render_debug(&self, ui: &Ui) {
-        ui.display("Current Index", self.current_index);
-        ui.header("Input Entries", || {
-            ui.table(
-                "action-request-queue-inputs",
-                [
-                    TableColumnSetup::new("State Index"),
-                    TableColumnSetup::new("Actions"),
-                ],
-                self.input_entries.items(),
-                |ui, _i, entry| {
-                    ui.table_next_column();
-                    ui.text(entry.state_index.to_string());
+        ui.display("Current TAE ID", self.current_tae_id);
 
-                    ui.table_next_column();
-                    ui.text(format!("{:?}", entry.actions));
-                },
-            );
-        });
-        ui.header("Cancel Entries", || {
-            ui.table(
-                "action-request-queue-cancels",
-                [
-                    TableColumnSetup::new("State Index"),
-                    TableColumnSetup::new("Actions"),
-                ],
-                self.cancel_entries.items(),
-                |ui, _i, entry| {
-                    ui.table_next_column();
-                    ui.text(entry.state_index.to_string());
+        ui.list(
+            "Input Entries",
+            self.input_entries.iter(),
+            |ui, _i, input_entry| {
+                ui.nested(format!("TAE {}", input_entry.tae_id), input_entry.actions);
+            },
+        );
 
-                    ui.table_next_column();
-                    ui.text(format!("{:?}", entry.actions));
-                },
-            );
-        });
+        ui.list(
+            "Cancel Entries",
+            self.input_entries.iter(),
+            |ui, _i, input_entry| {
+                ui.nested(format!("TAE {}", input_entry.tae_id), input_entry.actions);
+            },
+        );
     }
 }
 
@@ -172,7 +154,7 @@ impl DebugDisplay for ChrActions {
             "chr-actions",
             [
                 TableColumnSetup::new("Action"),
-                TableColumnSetup::new("Active"),
+                TableColumnSetup::new("State"),
             ],
             ACTIONS.iter(),
             |ui, _i, (name, getter)| {
@@ -180,7 +162,7 @@ impl DebugDisplay for ChrActions {
                 ui.text(name);
 
                 ui.table_next_column();
-                ui.text(if getter(self) { "YES" } else { "-" });
+                ui.text(getter(self).to_string());
             },
         );
 
@@ -197,7 +179,7 @@ impl DebugDisplay for ChrActions {
                     ui.text(name);
 
                     ui.table_next_column();
-                    ui.text(if getter(self) { "YES" } else { "-" });
+                    ui.text(getter(self).to_string());
                 },
             );
         });
