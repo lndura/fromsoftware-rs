@@ -13,7 +13,7 @@ use std::{mem::MaybeUninit, ptr::NonNull};
 /// [cppreference - `std::list`]: https://en.cppreference.com/w/cpp/container/list.html
 /// [MSVC STL source - `list`]: https://github.com/microsoft/STL/blob/main/stl/inc/list
 /// [Raymond Chen's breakdown of `std::list`]: https://devblogs.microsoft.com/oldnewthing/20230804-00/?p=108547
-pub struct List<T, A: Allocator> {
+pub struct List<T, A: StlAllocator> {
     #[cfg(any(not(feature = "msvc2012"), feature = "msvc2015"))]
     pub allocator: A,
     head: NonNull<Node<T>>,
@@ -29,11 +29,11 @@ struct Node<T> {
     value: MaybeUninit<T>,
 }
 
-impl<T, A: Allocator> List<T, A> {
+impl<T, A: StlAllocator> List<T, A> {
     /// Creates an empty list backed by `allocator`.
     ///
     /// Equivalent to `std::list<T>()` with a custom allocator
-    pub fn new_in(mut allocator: A) -> Self {
+    pub fn new_in(allocator: A) -> Self {
         // Allocate the sentinel head node. Its value is never initialized
         let head = allocator.allocate::<Node<T>>();
         unsafe {
@@ -214,7 +214,7 @@ impl<T, A: Allocator> List<T, A> {
     }
 }
 
-impl<T, A: Allocator> Drop for List<T, A> {
+impl<T, A: StlAllocator> Drop for List<T, A> {
     fn drop(&mut self) {
         self.clear();
         unsafe { self.allocator.deallocate_raw(self.head.as_ptr() as _) };

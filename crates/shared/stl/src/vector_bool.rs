@@ -16,7 +16,7 @@ const VBITS: usize = VBase::BITS as usize;
 /// [MSVC STL source - `vector<bool>`]: https://github.com/microsoft/STL/blob/main/stl/inc/vector
 /// [Raymond Chen's breakdown of `std::vector<bool>`]: https://devblogs.microsoft.com/oldnewthing/20200313-00/?p=103559
 #[repr(C)]
-pub struct VectorBool<A: Allocator> {
+pub struct VectorBool<A: StlAllocator> {
     #[cfg(any(not(feature = "msvc2012"), feature = "msvc2015"))]
     pub allocator: A,
     first: *mut VBase,
@@ -26,7 +26,7 @@ pub struct VectorBool<A: Allocator> {
     pub allocator: A,
 }
 
-impl<A: Allocator> VectorBool<A> {
+impl<A: StlAllocator> VectorBool<A> {
     /// Creates an empty `vector<bool>` backed by `allocator`.
     ///
     /// Equivalent to `std::vector<bool>()` with a custom allocator
@@ -200,7 +200,7 @@ impl<A: Allocator> VectorBool<A> {
     }
 }
 
-impl<'a, A: Allocator> IntoIterator for &'a VectorBool<A> {
+impl<'a, A: StlAllocator> IntoIterator for &'a VectorBool<A> {
     type Item = bool;
     type IntoIter = VectorBoolIter<'a, A>;
 
@@ -209,12 +209,12 @@ impl<'a, A: Allocator> IntoIterator for &'a VectorBool<A> {
     }
 }
 
-pub struct VectorBoolIter<'a, A: Allocator> {
+pub struct VectorBoolIter<'a, A: StlAllocator> {
     vec: &'a VectorBool<A>,
     index: usize,
 }
 
-impl<'a, A: Allocator> Iterator for VectorBoolIter<'a, A> {
+impl<'a, A: StlAllocator> Iterator for VectorBoolIter<'a, A> {
     type Item = bool;
 
     #[inline]
@@ -231,14 +231,14 @@ impl<'a, A: Allocator> Iterator for VectorBoolIter<'a, A> {
     }
 }
 
-impl<A: Allocator> ExactSizeIterator for VectorBoolIter<'_, A> {}
+impl<A: StlAllocator> ExactSizeIterator for VectorBoolIter<'_, A> {}
 
 #[inline]
 const fn bits_to_words(bits: usize) -> usize {
     bits.div_ceil(VBITS)
 }
 
-impl<A: Allocator> Drop for VectorBool<A> {
+impl<A: StlAllocator> Drop for VectorBool<A> {
     fn drop(&mut self) {
         if self.end > 0 {
             unsafe { self.allocator.deallocate_raw(self.first as _) };

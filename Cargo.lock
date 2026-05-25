@@ -284,22 +284,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "cxx-stl"
-version = "4.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e42cf6d86f92c165eaf2d4afa54382ec9b8d1cdef39f4265bc938cd055198f83"
-dependencies = [
- "cstl-sys",
-]
-
-[[package]]
 name = "darksouls3"
 version = "0.12.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "46d3df52b6a59631a6032d09b76637c8b0ef9b289596c8a174bba1badf450020"
 dependencies = [
  "bitfield",
- "cxx-stl 3.4.0",
+ "cxx-stl",
  "encoding_rs",
  "fromsoftware-shared 0.12.0",
  "pelite",
@@ -316,9 +307,9 @@ name = "darksouls3"
 version = "0.13.0"
 dependencies = [
  "bitfield",
- "cxx-stl 4.4.0",
  "encoding_rs",
  "fromsoftware-shared 0.13.0",
+ "fromsoftware-shared-stl",
  "pelite",
  "thiserror 1.0.69",
  "vtable-rs",
@@ -452,9 +443,9 @@ version = "0.13.0"
 dependencies = [
  "bitfield",
  "bitflags 2.11.1",
- "cxx-stl 4.4.0",
  "encoding_rs",
  "fromsoftware-shared 0.13.0",
+ "fromsoftware-shared-stl",
  "glam",
  "num_enum",
  "pelite",
@@ -920,9 +911,9 @@ dependencies = [
 
 [[package]]
 name = "num-conv"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6673768db2d862beb9b39a78fdcb1a69439615d5794a1be50caa9bc92c81967"
+checksum = "521739c6d2bac4aa25192232afe6841231376b2b26d4d9fae5ecf8ca5772e441"
 
 [[package]]
 name = "num-traits"
@@ -1208,9 +1199,9 @@ version = "0.13.0"
 dependencies = [
  "bitfield",
  "bitflags 2.11.1",
- "cxx-stl 4.4.0",
  "encoding_rs",
  "fromsoftware-shared 0.13.0",
+ "fromsoftware-shared-stl",
  "pelite",
  "thiserror 1.0.69",
  "vtable-rs",
