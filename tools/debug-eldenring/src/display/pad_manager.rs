@@ -213,36 +213,34 @@ impl DebugDisplay for DynamicBitset {
 
 impl DebugDisplay for DLVector<NonNull<DLUserInputDeviceImpl>> {
     fn render_debug(&self, ui: &hudhook::imgui::Ui) {
-        self.iter()
-            .enumerate()
-            .for_each(|(index, device_ptr)| {
-                let device = unsafe { device_ptr.as_ref() };
-                if let Some(device) = device.as_subclass::<VirtualMultiDevice>() {
-                    ui.header(format!("[{}] VirtualMultiDevice", index), || {
-                        device.render_debug(ui);
-                    });
-                }
-                if let Some(device) = device.as_subclass::<KeyboardDevice>() {
-                    ui.header(format!("[{}] KeyboardDevice", index), || {
-                        device.render_debug(ui);
-                    });
-                }
-                if let Some(device) = device.as_subclass::<MouseDevice>() {
-                    ui.header(format!("[{}] MouseDevicee", index), || {
-                        device.render_debug(ui);
-                    });
-                }
-                if let Some(device) = device.as_subclass::<PadDevice>() {
-                    ui.header(format!("[{}] PadDevice", index), || {
-                        device.render_debug(ui);
-                    });
-                }
-                if let Some(device) = device.as_subclass::<DummyDevice>() {
-                    ui.header(format!("[{}] DummyDevice", index), || {
-                        device.render_debug(ui);
-                    });
-                }
-            });
+        self.iter().enumerate().for_each(|(index, device_ptr)| {
+            let device = unsafe { device_ptr.as_ref() };
+            if let Some(device) = device.as_subclass::<VirtualMultiDevice>() {
+                ui.header(format!("[{}] VirtualMultiDevice", index), || {
+                    device.render_debug(ui);
+                });
+            }
+            if let Some(device) = device.as_subclass::<KeyboardDevice>() {
+                ui.header(format!("[{}] KeyboardDevice", index), || {
+                    device.render_debug(ui);
+                });
+            }
+            if let Some(device) = device.as_subclass::<MouseDevice>() {
+                ui.header(format!("[{}] MouseDevicee", index), || {
+                    device.render_debug(ui);
+                });
+            }
+            if let Some(device) = device.as_subclass::<PadDevice>() {
+                ui.header(format!("[{}] PadDevice", index), || {
+                    device.render_debug(ui);
+                });
+            }
+            if let Some(device) = device.as_subclass::<DummyDevice>() {
+                ui.header(format!("[{}] DummyDevice", index), || {
+                    device.render_debug(ui);
+                });
+            }
+        });
     }
 }
 
