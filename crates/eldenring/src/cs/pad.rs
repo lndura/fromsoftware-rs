@@ -31,9 +31,7 @@ pub struct CSPad {
 }
 
 impl CSPad {
-    pub fn poll_digital_input<I: Into<i32>>(&self, input: I) -> bool {
-        let input_code = input.into();
-
+    pub fn poll_digital_input(&self, input_code: UserInputKey) -> bool {
         if !self.allow_polling {
             return false;
         }
@@ -66,9 +64,7 @@ impl CSPad {
         })
     }
 
-    pub fn poll_analog_input<I: Into<i32>>(&self, input: I) -> f32 {
-        let input_code = input.into();
-
+    pub fn poll_analog_input(&self, input_code: UserInputKey) -> f32 {
         if !self.allow_polling {
             return 0.0;
         }
@@ -95,7 +91,7 @@ impl CSPad {
             .unwrap_or_default()
     }
 
-    fn get_input_type_group(&self, key: i32) -> Option<&InputTypeGroup> {
+    fn get_input_type_group(&self, key: UserInputKey) -> Option<&InputTypeGroup> {
         let input_type_group_map = unsafe { self.input_type_group.as_ref() };
         input_type_group_map.find(&key)
     }
@@ -109,7 +105,7 @@ impl CSPad {
         }
     }
 
-    pub fn index_digital_input(&self, virtual_input_index: i32) -> bool {
+    fn index_digital_input(&self, virtual_input_index: i32) -> bool {
         let multi_device = unsafe { self.pad_device.as_ref() };
 
         let user_input_device = unsafe { multi_device.virtual_multi_device.as_ref() };
@@ -134,7 +130,7 @@ impl CSPad {
         false
     }
 
-    pub fn index_analog_input(&self, virtual_input_index: i32) -> f32 {
+    fn index_analog_input(&self, virtual_input_index: i32) -> f32 {
         let user_input_device = unsafe { self.pad_device.as_ref().virtual_multi_device.as_ref() };
         user_input_device.get_virtual_analog_state(virtual_input_index as usize)
     }
@@ -189,6 +185,7 @@ pub struct CSDebugCamPad {
 ///
 /// Source of name: Debug string in `CSInGamePad_UserInput1::vftable`.
 #[repr(i32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum UserInputKey {
     /// Horizontal movement of the mouse.
     /// (Hold)

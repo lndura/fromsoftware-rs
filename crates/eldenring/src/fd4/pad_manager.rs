@@ -18,14 +18,11 @@ type RuntimeTypeHandle = usize;
 type FD4PadDeviceList = DLFixedVector<NonNull<FD4PadDevice>, CAPACITY>;
 
 /// DLFixedVector with 4 pointers to [DLMap<>] instances that hold a [PadEntry].
-type CSPadEntryMapList =
-    DLFixedVector<NonNull<DLMap<RuntimeTypeHandle, PadEntry>>, CAPACITY>;
+type CSPadEntryMapList = DLFixedVector<NonNull<DLMap<RuntimeTypeHandle, PadEntry>>, CAPACITY>;
 
 /// DLFixedVector with 4 pointers to [DLMap<>] instances that hold a [CSKeyAssign].
-type CSKeyAssignMapList = DLFixedVector<
-    NonNull<DLMap<RuntimeTypeHandle, NonNull<CSKeyAssign>>>,
-    CAPACITY,
->;
+type CSKeyAssignMapList =
+    DLFixedVector<NonNull<DLMap<RuntimeTypeHandle, NonNull<CSKeyAssign>>>, CAPACITY>;
 
 /// Structure that manages inputs from devices, a.e Controller, Keyboard and Mouse.
 #[repr(C)]

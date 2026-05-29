@@ -1,7 +1,10 @@
 use std::ptr::NonNull;
 
 use crate::{
-    DLMap, cs::CSKeyAssign, dltx::{DLString, DLUTF16StringKind}, fd4::FD4PadDevice
+    DLMap,
+    cs::{CSKeyAssign, UserInputKey},
+    dltx::{DLString, DLUTF16StringKind},
+    fd4::FD4PadDevice,
 };
 
 #[repr(C)]
@@ -28,7 +31,7 @@ pub struct FD4BasePad {
     /// Represents a `DLMap<>` that groups the given input code to an [InputTypeGroup].
     ///
     /// The [InputTypeGroup] contains the [InputType] for that input and the code to poll it with.
-    pub input_type_group: NonNull<DLMap<i32, InputTypeGroup>>,
+    pub input_type_group: NonNull<DLMap<UserInputKey, InputTypeGroup>>,
     /// Represents a `DLMap<>` that maps the given input code to two booleans.
     ///
     /// If the first boolean is true and the second boolean is false, the input can be polled.
@@ -39,10 +42,10 @@ pub struct FD4BasePad {
     pub empty_str: DLString<DLUTF16StringKind>,
     /// Represents the Cursor relative to the game window.
     pub window_cursor_context: NonNull<WindowCursorContext>,
-    /// Represents a [DLMap<>] that maps the given input code to a boolean representing whether the input is pressed or not.
+    /// Represents a [DLMap<i31, bool>] that maps the given input code to a boolean representing whether the input is pressed or not.
     ///
     /// Couldn't find a single reference that inserts in to this DLMap in Ghidra for `CSInGamePad`'s.
-    pub unused_input_map: DLMap<i32, bool>,
+    pub unused_input_map: DLMap<UserInputKey, bool>,
 }
 
 #[repr(C)]
