@@ -1,8 +1,6 @@
 use std::ptr::NonNull;
 
-use fromsoftware_shared_stl::Map;
-
-use crate::{DLVector, dlkr::DLAllocator};
+use crate::{DLMap, DLVector};
 
 #[repr(C)]
 pub struct FD4BaseKeyAssign {
@@ -11,9 +9,9 @@ pub struct FD4BaseKeyAssign {
     input_mapper: *const (),
     virtual_input_data_index_vector: DLVector<Unk18VectorItem>,
     /// Takes the result from the `InputTypeGroup and maps it to an index to the `DLVirtualInputData`.
-    pub virtual_input_data_index_map: NonNull<Map<i32, i32, &'static DLAllocator>>,
+    pub virtual_input_data_index_map: NonNull<DLMap<i32, i32>>,
     /// See field 0x78 of `FD4PadDevice`.
-    pub mouse_button_states_map: Map<i32, i32, &'static DLAllocator>,
+    pub mouse_button_states_map: DLMap<i32, i32>,
     /// Contains the same pointer that the `DLFixedVector<>` in `FD4PadManager.unka8` has.
     unk58: *const (),
     unk60: u32,

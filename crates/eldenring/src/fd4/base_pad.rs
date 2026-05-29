@@ -1,12 +1,7 @@
 use std::ptr::NonNull;
 
-use fromsoftware_shared_stl::Map;
-
 use crate::{
-    cs::CSKeyAssign,
-    dlkr::DLAllocator,
-    dltx::{DLString, DLUTF16StringKind},
-    fd4::FD4PadDevice,
+    DLMap, cs::CSKeyAssign, dltx::{DLString, DLUTF16StringKind}, fd4::FD4PadDevice
 };
 
 #[repr(C)]
@@ -30,24 +25,24 @@ pub struct FD4BasePad {
     pub key_assign: NonNull<CSKeyAssign>,
     /// Usually just 1.
     unk30: usize,
-    /// Represents a `Map<>` that groups the given input code to an [InputTypeGroup].
+    /// Represents a `DLMap<>` that groups the given input code to an [InputTypeGroup].
     ///
     /// The [InputTypeGroup] contains the [InputType] for that input and the code to poll it with.
-    pub input_type_group: NonNull<Map<i32, InputTypeGroup, &'static DLAllocator>>,
-    /// Represents a `Map<>` that maps the given input code to two booleans.
+    pub input_type_group: NonNull<DLMap<i32, InputTypeGroup>>,
+    /// Represents a `DLMap<>` that maps the given input code to two booleans.
     ///
     /// If the first boolean is true and the second boolean is false, the input can be polled.
-    pub input_code_check: NonNull<Map<i32, InputCodeState, &'static DLAllocator>>,
+    pub input_code_check: NonNull<DLMap<i32, InputCodeState>>,
     /// Emtpy [`DLString<DLUTF16StringKind>`].
     ///
     /// Maybe leftover from debug shenanigans?
     pub empty_str: DLString<DLUTF16StringKind>,
     /// Represents the Cursor relative to the game window.
     pub window_cursor_context: NonNull<WindowCursorContext>,
-    /// Represents a `Map<>` that maps the given input code to a boolean representing whether the input is pressed or not.
+    /// Represents a [DLMap<>] that maps the given input code to a boolean representing whether the input is pressed or not.
     ///
-    /// Couldn't find a single reference that inserts in to this Map in Ghidra for `CSInGamePad`'s.
-    pub unused_input_map: Map<i32, bool, &'static DLAllocator>,
+    /// Couldn't find a single reference that inserts in to this DLMap in Ghidra for `CSInGamePad`'s.
+    pub unused_input_map: DLMap<i32, bool>,
 }
 
 #[repr(C)]
