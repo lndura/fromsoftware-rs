@@ -46,7 +46,7 @@ pub struct FD4BasePad {
     pub window_cursor_context: NonNull<WindowCursorContext>,
     /// Represents a `Map<>` that maps the given input code to a boolean representing whether the input is pressed or not.
     ///
-    /// Couldn't find a single reference that inserts in to this Tree in Ghidra for `CSInGamePad`'s.
+    /// Couldn't find a single reference that inserts in to this Map in Ghidra for `CSInGamePad`'s.
     pub unused_input_map: Map<i32, bool, &'static DLAllocator>,
 }
 

@@ -96,13 +96,13 @@ impl CSPad {
     }
 
     fn get_input_type_group(&self, key: i32) -> Option<&InputTypeGroup> {
-        let input_type_group_tree = unsafe { self.input_type_group.as_ref() };
-        input_type_group_tree.find(&key)
+        let input_type_group_map = unsafe { self.input_type_group.as_ref() };
+        input_type_group_map.find(&key)
     }
 
     fn check_input(&self, mapped_input: i32) -> bool {
-        let input_code_check_tree = unsafe { self.input_code_check.as_ref() };
-        if let Some(check) = input_code_check_tree.find(&mapped_input) {
+        let input_code_check_map = unsafe { self.input_code_check.as_ref() };
+        if let Some(check) = input_code_check_map.find(&mapped_input) {
             check.state_1 && !check.state_2
         } else {
             false
