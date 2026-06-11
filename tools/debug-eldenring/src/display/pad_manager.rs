@@ -403,7 +403,7 @@ impl DebugDisplay for CSPad {
                 tree.iter(),
                 |ui, _, pair| {
                     ui.table_next_column();
-                    ui.text(format!("{}", pair.first));
+                    ui.text(format!("{:#?}", pair.first));
                     ui.table_next_column();
                     pair.second.render_debug(ui);
                 },
@@ -451,7 +451,7 @@ impl DebugDisplay for CSPad {
                 tree.iter(),
                 |ui, _, pair| {
                     ui.table_next_column();
-                    ui.text(format!("{}", pair.first));
+                    ui.text(format!("{:#?}", pair.first));
                     ui.table_next_column();
                     ui.text(format!("{}", pair.second));
                 },
