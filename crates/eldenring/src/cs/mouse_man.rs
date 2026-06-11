@@ -17,9 +17,9 @@ pub struct CSMouseMan {
     unk1c: f32,
     unk20: f32,
     unk24: f32,
-    /// Horizontal position of the mouse relative to the window the game is opened in.
+    /// Horizontal position of the mouse relative to the game window's top left corner.
     pub cursor_x: i32,
-    /// Vertical position of the mouse relative to the window the game is opened in.
+    /// Vertical position of the mouse relative to the game window's top left corner.
     pub cursor_y: i32,
     /// `true` if the current mouse position doesn't match the current `cursor_x` and `cursor_y`.
     //
