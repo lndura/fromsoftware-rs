@@ -13,11 +13,11 @@ pub struct FD4BasePad {
     allocator: *const (),
     /// [FD4PadDevice] instance referenced in `FD4PadManager.devices`
     pub pad_device: NonNull<FD4PadDevice>,
-    /// `パッド名未設定` | `Pad name not set`
+    /// Name of the pad device.
     ///
-    /// The game will sometimes change this to the name of the `CSPad` type.
-    ///
-    /// For example: `CSMenuViewerPad` or `CSDebugPausePad`.
+    /// While this is typically set to `パッド名未設定` (i.e. "pad name unset"),
+    /// the game will sometimes change this to the name of the `CSPad` type,
+    /// such as  `CSMenuViewerPad` or `CSDebugPausePad`.
     pub pad_name: *const u16,
     /// Only allows polling when `true`.
     pub allow_polling: bool,
@@ -85,9 +85,9 @@ pub struct WindowCursorContext {
     /// Copied over from FD4PadManager when constructed.
     pub window_handle: isize,
     unk8: [u8; 0x18],
-    /// Horizontal position of the mouse relative to the window the game is opened in.
+    /// Horizontal position of the mouse relative to the game window's top left corner.
     pub cursor_x: i32,
-    /// Vertical position of the mouse relative to the window the game is opened in.
+    /// Vertical position of the mouse relative to the game window's top left corner.
     pub cursor_y: i32,
     unk28: [u8; 0x14],
 }

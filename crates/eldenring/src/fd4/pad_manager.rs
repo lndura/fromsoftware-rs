@@ -72,7 +72,10 @@ pub struct FD4PadManager {
     /// Becomes `true` after the frame `exit_foreground_signaled` was set to `true`.
     pub is_back_ground_window: bool,
     unk2fa: bool,
-    pub disable_enumeration: bool,
+    /// True when the game is using libScePad (ps5 gamepad library) for polling controller inputs.
+    /// 
+    /// Also disables DInput8 Device enumeration when true.
+    pub use_lib_sce_pad: bool,
 }
 
 impl FD4PadManager {
