@@ -73,8 +73,8 @@ pub struct FD4PadManager {
     pub is_back_ground_window: bool,
     unk2fa: bool,
     /// True when the game is using libScePad (ps5 gamepad library) for polling controller inputs.
-    /// 
-    /// Also disables DInput8 Device enumeration when true.
+    ///
+    /// Additionally disables device enumeration.
     pub use_lib_sce_pad: bool,
 }
 
