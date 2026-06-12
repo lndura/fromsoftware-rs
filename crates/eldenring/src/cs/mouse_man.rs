@@ -11,11 +11,23 @@ pub struct CSMouseMan {
     unk0d: bool,
     unk0e: bool,
     unk0f: bool,
+    /// Multiplier of *remapped mouse sensitivity*. Has a linear effect on the cursor speed.
+    ///
+    /// When the game calculates mouse sensitivity, it first takes the value present in game
+    /// settings (0-10), remaps it linearly to the `[mouse_coefficient_min, mouse_coefficient_max]`
+    /// interval. This is then multiplied by the base coefficient and the raw mouse movement in
+    /// pixels to obtain the final, sensitivity adjusted mouse displacement.
     pub mouse_base_coefficient: f32,
+    /// Value the minimum mouse sensitivity setting (0) is linearly mapped to.
     pub mouse_coefficient_min: f32,
+    /// Value the maximum mouse sensitivity setting (10) is linearly mapped to.
     pub mouse_coefficient_max: f32,
-    unk1c: f32,
-    unk20: f32,
+    /// Value the maximum target change sensitivity setting (0) is linearly mapped to.
+    pub target_change_sensitivity_coefficient_max: f32,
+    /// Value the minimum target change sensitivity setting (0) is linearly mapped to.
+    pub target_change_sensitivity_coefficient_min: f32,
+    /// Seems to be related to keeping the cursor withing the game window?
+    /// Zeroed while in menu, climbs to 0.5 while in-game.
     unk24: f32,
     /// Horizontal position of the mouse relative to the game window's top left corner.
     pub cursor_x: i32,
