@@ -26,7 +26,7 @@ pub struct CSMouseMan {
     pub target_change_sensitivity_coefficient_max: f32,
     /// Value the minimum target change sensitivity setting (0) is linearly mapped to.
     pub target_change_sensitivity_coefficient_min: f32,
-    /// Seems to be related to keeping the cursor withing the game window?
+    /// Seems to be related to keeping the cursor within the game window?
     /// Zeroed while in menu, climbs to 0.5 while in-game.
     unk24: f32,
     /// Horizontal position of the mouse relative to the game window's top left corner.
