@@ -430,6 +430,24 @@ impl<T: DLStringKind, U: DLStringKind> PartialEq<DLString<U>> for DLString<T> {
     }
 }
 
+
+impl<T: DLStringKind> Ord for DLString<T> {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        match (self.to_string(), other.to_string()) {
+            (Ok(a), Ok(b)) => a.cmp(&b),
+            (Ok(_), Err(_)) => std::cmp::Ordering::Greater,
+            (Err(_), Ok(_)) => std::cmp::Ordering::Less,
+            (Err(_), Err(_)) => self.base.as_bytes().cmp(other.base.as_bytes()),
+        }
+    }
+}
+
+impl<T: DLStringKind> PartialOrd for DLString<T> {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl<T: DLStringKind> Eq for DLString<T> {}
 
 /// `DLString == &str`, `DLString == String`, `DLString == Cow<str>`, etc.

@@ -57,6 +57,7 @@ struct EldenRingDebugGui {
     // Resources
     task_group: StaticDebugger<CSTaskGroup>,
     task: StaticDebugger<CSTaskImp>,
+    user_config: StaticDebugger<UserConfig>,
     param_repository: StaticDebugger<FD4ParamRepository>,
 
     // Render
@@ -167,6 +168,7 @@ unsafe fn render_live_reload(gui: &mut EldenRingDebugGui, ui: &mut Ui) {
                 gui.task_group.render_debug(ui);
                 gui.task.render_debug(ui);
                 gui.param_repository.render_debug(ui);
+                gui.user_config.render_debug(ui);
                 item.end();
             }
 

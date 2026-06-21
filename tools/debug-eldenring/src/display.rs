@@ -22,6 +22,7 @@ pub(crate) mod session_manager;
 pub(crate) mod sfx;
 pub(crate) mod shared;
 pub(crate) mod task;
+pub(crate) mod user_config;
 pub(crate) mod world_chr_man;
 
 debug::define_debug_display!();
